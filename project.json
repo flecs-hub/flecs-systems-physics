@@ -1,0 +1,13 @@
+{
+    "id":"reflecs.systems.physics",
+    "type":"package",
+    "value": {
+        "managed": false,
+        "use": [
+            "reflecs",
+            "reflecs.components.transform",
+            "reflecs.components.physics"
+        ],
+        "lib": ["m"]
+    }
+}

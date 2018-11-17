@@ -38,7 +38,7 @@ void EcsMove2D_w_Velocity(EcsRows *rows) {
     }
 }
 
-void Rotate2D(EcsRows *rows) {
+void EcsRotate2D(EcsRows *rows) {
     void *row;
     for (row = rows->first; row < rows->last; row = ecs_next(rows, row)) {
         EcsRotation2D *r = ecs_column(rows, row, 0);
@@ -119,7 +119,7 @@ void EcsSystemsPhysics(
         ECS_SYSTEM(world, EcsMove2D_w_Velocity, EcsPeriodic,
             EcsPosition2D, ?EcsSpeed, EcsVelocity2D);
 
-        ECS_SYSTEM(world, Rotate2D, EcsPeriodic,
+        ECS_SYSTEM(world, EcsRotate2D, EcsPeriodic,
             EcsRotation2D, EcsAngularSpeed);
 
         ECS_FAMILY(world, EcsMove2D, EcsMove2D_w_Rotation, EcsMove2D_w_Velocity);
@@ -127,7 +127,7 @@ void EcsSystemsPhysics(
         handles->Move2D_w_Rotation = EcsMove2D_w_Rotation_h;
         handles->Move2D_w_Velocity = EcsMove2D_w_Velocity_h;
         handles->Move2D = EcsMove2D_h;
-        handles->Rotate2D = Rotate2D_h;
+        handles->Rotate2D = EcsRotate2D_h;
     }
 
     if (do_3d) {
@@ -162,7 +162,7 @@ void EcsSystemsPhysics(
         handles->Rotate = Rotate_h;
     } else if (!do_3d) {
         ECS_FAMILY(world, Move, EcsMove2D);
-        ECS_FAMILY(world, Rotate, Rotate2D);
+        ECS_FAMILY(world, Rotate, EcsRotate2D);
 
         handles->Move = Move_h;
         handles->Rotate = Rotate_h;

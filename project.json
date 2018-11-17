@@ -1,8 +1,7 @@
 {
     "id":"reflecs.systems.physics",
-    "type":"package",
+    "type":"library",
     "value": {
-        "managed": false,
         "use": [
             "reflecs",
             "reflecs.components.transform",

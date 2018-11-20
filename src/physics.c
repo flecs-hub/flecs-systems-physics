@@ -124,6 +124,15 @@ void EcsSystemsPhysics(
 
         ECS_FAMILY(world, EcsMove2D, EcsMove2D_w_Rotation, EcsMove2D_w_Velocity);
 
+        ecs_add(world, EcsMove2D_w_Rotation_h, EcsFrameworkSystem_h);
+        ecs_add(world, EcsMove2D_w_Velocity_h, EcsFrameworkSystem_h);
+        ecs_add(world, EcsRotate2D_h, EcsFrameworkSystem_h);
+        ecs_add(world, EcsMove2D_h, EcsFrameworkSystem_h);
+        ecs_commit(world, EcsMove2D_w_Rotation_h);
+        ecs_commit(world, EcsMove2D_w_Velocity_h);
+        ecs_commit(world, EcsRotate2D_h);
+        ecs_commit(world, EcsMove2D_h);
+
         handles->Move2D_w_Rotation = EcsMove2D_w_Rotation_h;
         handles->Move2D_w_Velocity = EcsMove2D_w_Velocity_h;
         handles->Move2D = EcsMove2D_h;
@@ -142,6 +151,15 @@ void EcsSystemsPhysics(
 
         ECS_FAMILY(world, EcsMove3D, EcsMove3D_w_Rotation, EcsMove3D_w_Velocity);
 
+        ecs_add(world, EcsMove3D_w_Rotation_h, EcsFrameworkSystem_h);
+        ecs_add(world, EcsMove3D_w_Velocity_h, EcsFrameworkSystem_h);
+        ecs_add(world, EcsRotate3D_h, EcsFrameworkSystem_h);
+        ecs_add(world, EcsMove3D_h, EcsFrameworkSystem_h);
+        ecs_commit(world, EcsMove3D_w_Rotation_h);
+        ecs_commit(world, EcsMove3D_w_Velocity_h);
+        ecs_commit(world, EcsRotate3D_h);
+        ecs_commit(world, EcsMove3D_h);
+
         handles->Move3D_w_Rotation = EcsMove3D_w_Rotation_h;
         handles->Move3D_w_Velocity = EcsMove3D_w_Velocity_h;
         handles->Move3D = EcsMove3D_h;
@@ -149,23 +167,23 @@ void EcsSystemsPhysics(
     }
 
     if (do_2d && do_3d) {
-        ECS_FAMILY(world, Move, EcsMove2D, EcsMove3D);
-        ECS_FAMILY(world, Rotate, Rotate2D, EcsRotate3D);
+        ECS_FAMILY(world, EcsMove, EcsMove2D, EcsMove3D);
+        ECS_FAMILY(world, EcsRotate, Rotate2D, EcsRotate3D);
 
-        handles->Rotate = Rotate_h;
-        handles->Move = Move_h;
+        handles->Move = EcsMove_h;
+        handles->Rotate = EcsRotate_h;
     } else if (!do_2d) {
-        ECS_FAMILY(world, Move, EcsMove3D);
-        ECS_FAMILY(world, Rotate, EcsRotate3D);
+        ECS_FAMILY(world, EcsMove, EcsMove3D);
+        ECS_FAMILY(world, EcsRotate, EcsRotate3D);
 
-        handles->Move = Move_h;
-        handles->Rotate = Rotate_h;
+        handles->Move = EcsMove_h;
+        handles->Rotate = EcsRotate_h;
     } else if (!do_3d) {
-        ECS_FAMILY(world, Move, EcsMove2D);
-        ECS_FAMILY(world, Rotate, EcsRotate2D);
+        ECS_FAMILY(world, EcsMove, EcsMove2D);
+        ECS_FAMILY(world, EcsRotate, EcsRotate2D);
 
-        handles->Move = Move_h;
-        handles->Rotate = Rotate_h;
+        handles->Move = EcsMove_h;
+        handles->Rotate = EcsRotate_h;
     }
 
     ecs_enable(world, handles->Move, false);

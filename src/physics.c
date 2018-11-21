@@ -113,13 +113,13 @@ void EcsSystemsPhysics(
     memset(handles, 0, sizeof(EcsSystemsPhysicsHandles));
 
     if (do_2d) {
-        ECS_SYSTEM(world, EcsMove2D_w_Rotation, EcsPeriodic,
+        ECS_SYSTEM(world, EcsMove2D_w_Rotation, EcsOnFrame,
             EcsPosition2D, EcsRotation2D, EcsSpeed, !EcsVelocity2D);
 
-        ECS_SYSTEM(world, EcsMove2D_w_Velocity, EcsPeriodic,
+        ECS_SYSTEM(world, EcsMove2D_w_Velocity, EcsOnFrame,
             EcsPosition2D, ?EcsSpeed, EcsVelocity2D);
 
-        ECS_SYSTEM(world, EcsRotate2D, EcsPeriodic,
+        ECS_SYSTEM(world, EcsRotate2D, EcsOnFrame,
             EcsRotation2D, EcsAngularSpeed);
 
         ECS_FAMILY(world, EcsMove2D, EcsMove2D_w_Rotation, EcsMove2D_w_Velocity);
@@ -140,13 +140,13 @@ void EcsSystemsPhysics(
     }
 
     if (do_3d) {
-        ECS_SYSTEM(world, EcsMove3D_w_Rotation, EcsPeriodic,
+        ECS_SYSTEM(world, EcsMove3D_w_Rotation, EcsOnFrame,
             EcsPosition3D, ?EcsRotation3D, EcsSpeed, !EcsVelocity3D);
 
-        ECS_SYSTEM(world, EcsMove3D_w_Velocity, EcsPeriodic,
+        ECS_SYSTEM(world, EcsMove3D_w_Velocity, EcsOnFrame,
             EcsPosition3D, ?EcsSpeed, EcsVelocity3D);
 
-        ECS_SYSTEM(world, EcsRotate3D, EcsPeriodic,
+        ECS_SYSTEM(world, EcsRotate3D, EcsOnFrame,
             EcsRotation3D, ?EcsAngularSpeed, EcsAngularVelocity);
 
         ECS_FAMILY(world, EcsMove3D, EcsMove3D_w_Rotation, EcsMove3D_w_Velocity);

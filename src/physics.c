@@ -14,8 +14,8 @@ void EcsMove2D_w_Rotation(EcsRows *rows) {
         x_speed = cos(r->angle) * speed->value;
         y_speed = sin(r->angle) * speed->value;
 
-        p->x += x_speed;
-        p->y += y_speed;
+        p->x += x_speed * rows->delta_time;
+        p->y += y_speed * rows->delta_time;
     }
 }
 
@@ -33,8 +33,8 @@ void EcsMove2D_w_Velocity(EcsRows *rows) {
             y_speed *= speed->value;
         }
 
-        p->x += x_speed;
-        p->y += y_speed;
+        p->x += x_speed * rows->delta_time;;
+        p->y += y_speed * rows->delta_time;;
     }
 }
 
@@ -43,7 +43,7 @@ void EcsRotate2D(EcsRows *rows) {
     for (row = rows->first; row < rows->last; row = ecs_next(rows, row)) {
         EcsRotation2D *r = ecs_column(rows, row, 0);
         EcsAngularSpeed *s = ecs_column(rows, row, 1);
-        r->angle += s->value;
+        r->angle += s->value * rows->delta_time;;
     }
 }
 
@@ -56,9 +56,9 @@ void EcsMove3D_w_Rotation(EcsRows *rows) {
         float x_speed = cos(r->z) * sin(r->y) * speed->value;
         float y_speed = cos(r->x) * sin(r->z) * speed->value;
         float z_speed = cos(r->y) * sin(r->x) * speed->value;
-        p->x += x_speed;
-        p->y += y_speed;
-        p->z += z_speed;
+        p->x += x_speed * rows->delta_time;;
+        p->y += y_speed * rows->delta_time;;
+        p->z += z_speed * rows->delta_time;;
     }
 }
 
@@ -78,8 +78,8 @@ void EcsMove3D_w_Velocity(EcsRows *rows) {
             z_speed *= speed->value;
         }
 
-        p->x += x_speed;
-        p->y += y_speed;
+        p->x += x_speed * rows->delta_time;;
+        p->y += y_speed * rows->delta_time;;
     }
 }
 
@@ -95,9 +95,9 @@ void EcsRotate3D(EcsRows *rows) {
             speed = s->value;
         }
 
-        r->x += v->x * speed;
-        r->y += v->y * speed;
-        r->z += v->z * speed;
+        r->x += v->x * speed * rows->delta_time;;
+        r->y += v->y * speed * rows->delta_time;;
+        r->z += v->z * speed * rows->delta_time;;
     }
 }
 
@@ -124,10 +124,10 @@ void EcsSystemsPhysics(
 
         ECS_FAMILY(world, EcsMove2D, EcsMove2D_w_Rotation, EcsMove2D_w_Velocity);
 
-        ecs_add(world, EcsMove2D_w_Rotation_h, EcsFrameworkSystem_h);
-        ecs_add(world, EcsMove2D_w_Velocity_h, EcsFrameworkSystem_h);
-        ecs_add(world, EcsRotate2D_h, EcsFrameworkSystem_h);
-        ecs_add(world, EcsMove2D_h, EcsFrameworkSystem_h);
+        ecs_add(world, EcsMove2D_w_Rotation_h, EcsHidden_h);
+        ecs_add(world, EcsMove2D_w_Velocity_h, EcsHidden_h);
+        ecs_add(world, EcsRotate2D_h, EcsHidden_h);
+        ecs_add(world, EcsMove2D_h, EcsHidden_h);
         ecs_commit(world, EcsMove2D_w_Rotation_h);
         ecs_commit(world, EcsMove2D_w_Velocity_h);
         ecs_commit(world, EcsRotate2D_h);
@@ -151,10 +151,10 @@ void EcsSystemsPhysics(
 
         ECS_FAMILY(world, EcsMove3D, EcsMove3D_w_Rotation, EcsMove3D_w_Velocity);
 
-        ecs_add(world, EcsMove3D_w_Rotation_h, EcsFrameworkSystem_h);
-        ecs_add(world, EcsMove3D_w_Velocity_h, EcsFrameworkSystem_h);
-        ecs_add(world, EcsRotate3D_h, EcsFrameworkSystem_h);
-        ecs_add(world, EcsMove3D_h, EcsFrameworkSystem_h);
+        ecs_add(world, EcsMove3D_w_Rotation_h, EcsHidden_h);
+        ecs_add(world, EcsMove3D_w_Velocity_h, EcsHidden_h);
+        ecs_add(world, EcsRotate3D_h, EcsHidden_h);
+        ecs_add(world, EcsMove3D_h, EcsHidden_h);
         ecs_commit(world, EcsMove3D_w_Rotation_h);
         ecs_commit(world, EcsMove3D_w_Velocity_h);
         ecs_commit(world, EcsRotate3D_h);

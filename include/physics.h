@@ -4,6 +4,7 @@
 #include <reflecs/reflecs.h>
 #include <reflecs/components/transform/transform.h>
 #include <reflecs/components/physics/physics.h>
+#include <reflecs/systems/physics/physics_2d.h>
 
 #ifdef __cplusplus
 extern "C" {

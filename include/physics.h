@@ -1,10 +1,8 @@
 #ifndef REFLECS_SYSTEMS_PHYSICS_H
 #define REFLECS_SYSTEMS_PHYSICS_H
 
-#include <reflecs/reflecs.h>
-#include <reflecs/components/transform/transform.h>
-#include <reflecs/components/physics/physics.h>
-#include <reflecs/systems/physics/physics_2d.h>
+#include "prebaked.h"
+#include "physics_2d.h"
 
 #ifdef __cplusplus
 extern "C" {

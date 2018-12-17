@@ -1,12 +1,14 @@
 {
     "id":"reflecs.systems.physics",
-    "type":"library",
+    "type":"package",
     "value": {
         "use": [
             "reflecs",
             "reflecs.components.transform",
             "reflecs.components.physics"
-        ],
+        ]
+    },
+    "lang.c": {
         "lib": ["m"]
     }
 }

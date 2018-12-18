@@ -1,9 +1,6 @@
 #ifndef REFLECS_SYSTEMS_PHYSICS_2D_H
 #define REFLECS_SYSTEMS_PHYSICS_2D_H
 
-#include <reflecs/reflecs.h>
-#include <reflecs/components/transform/transform.h>
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -21,7 +18,7 @@ typedef struct EcsCollision2DInfo {
  */
 typedef void* EcsCollider2DData[3];
 
-int8_t EcsPhysis2d_GetCollisionInfo(EcsCollider2DData *collider_a, EcsCollider2DData *collider_b, EcsCollision2DInfo *collision_out); 
+int8_t EcsPhysis2d_GetCollisionInfo(EcsCollider2DData *collider_a, EcsCollider2DData *collider_b, EcsCollision2DInfo *collision_out);
 
 #ifdef __cplusplus
 }

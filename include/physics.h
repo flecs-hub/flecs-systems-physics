@@ -1,7 +1,7 @@
 #ifndef REFLECS_SYSTEMS_PHYSICS_H
 #define REFLECS_SYSTEMS_PHYSICS_H
 
-#include "prebaked.h"
+#include "bake_config.h"
 #include "physics_2d.h"
 
 #ifdef __cplusplus

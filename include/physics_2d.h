@@ -6,13 +6,13 @@ extern "C" {
 #endif
 
 typedef struct EcsCollision2DInfo {
-    EcsVector2D normal;
+    EcsVec2 normal;
     float distance;
 } EcsCollision2DInfo;
 
 /**
  * Components needed to represent a collider
- *  [0] : EcsVector2D
+ *  [0] : EcsVec2
  *  [1] : EcsCircleCollider (Can be NULL)
  *  [2] : EcsPolygonCollider (Can be NULL)
  */

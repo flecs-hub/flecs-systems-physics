@@ -128,10 +128,6 @@ void EcsSystemsPhysics(
         ecs_add(world, EcsMove2D_w_Velocity_h, EcsHidden_h);
         ecs_add(world, EcsRotate2D_h, EcsHidden_h);
         ecs_add(world, EcsMove2D_h, EcsHidden_h);
-        ecs_commit(world, EcsMove2D_w_Rotation_h);
-        ecs_commit(world, EcsMove2D_w_Velocity_h);
-        ecs_commit(world, EcsRotate2D_h);
-        ecs_commit(world, EcsMove2D_h);
 
         handles->Move2D_w_Rotation = EcsMove2D_w_Rotation_h;
         handles->Move2D_w_Velocity = EcsMove2D_w_Velocity_h;
@@ -155,10 +151,6 @@ void EcsSystemsPhysics(
         ecs_add(world, EcsMove3D_w_Velocity_h, EcsHidden_h);
         ecs_add(world, EcsRotate3D_h, EcsHidden_h);
         ecs_add(world, EcsMove3D_h, EcsHidden_h);
-        ecs_commit(world, EcsMove3D_w_Rotation_h);
-        ecs_commit(world, EcsMove3D_w_Velocity_h);
-        ecs_commit(world, EcsRotate3D_h);
-        ecs_commit(world, EcsMove3D_h);
 
         handles->Move3D_w_Rotation = EcsMove3D_w_Rotation_h;
         handles->Move3D_w_Velocity = EcsMove3D_w_Velocity_h;

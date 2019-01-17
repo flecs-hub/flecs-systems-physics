@@ -1,11 +1,12 @@
 {
-    "id":"reflecs.systems.physics",
-    "type":"package",
+    "id": "reflecs.systems.physics",
+    "type": "package",
     "value": {
         "author": "Roberto Flores, Sander Mertens",
         "description": "Physics systems for reflecs",
         "use": [
             "reflecs",
+            "reflecs.math",
             "reflecs.components.transform",
             "reflecs.components.physics"
         ]

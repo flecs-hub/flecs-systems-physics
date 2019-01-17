@@ -9,16 +9,16 @@ extern "C" {
 #endif
 
 typedef struct EcsSystemsPhysicsHandles {
-   EcsHandle Move2D_w_Rotation;
-   EcsHandle Move2D_w_Velocity;
-   EcsHandle Move2D;
-   EcsHandle Move3D_w_Rotation;
-   EcsHandle Move3D_w_Velocity;
-   EcsHandle Move3D;
-   EcsHandle Move;
-   EcsHandle Rotate2D;
-   EcsHandle Rotate3D;
-   EcsHandle Rotate;
+   EcsEntity Move2D_w_Rotation;
+   EcsEntity Move2D_w_Velocity;
+   EcsEntity Move2D;
+   EcsEntity Move3D_w_Rotation;
+   EcsEntity Move3D_w_Velocity;
+   EcsEntity Move3D;
+   EcsEntity Move;
+   EcsEntity Rotate2D;
+   EcsEntity Rotate3D;
+   EcsEntity Rotate;
 } EcsSystemsPhysicsHandles;
 
 void EcsSystemsPhysics(

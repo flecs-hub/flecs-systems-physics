@@ -5,20 +5,30 @@
 extern "C" {
 #endif
 
-typedef struct EcsCollision2DInfo {
+typedef struct EcsCollision2D {
     EcsVec2 normal;
     float distance;
-} EcsCollision2DInfo;
+} EcsCollision2D;
 
-/**
- * Components needed to represent a collider
- *  [0] : EcsVec2
- *  [1] : EcsCircleCollider (Can be NULL)
- *  [2] : EcsPolygonCollider (Can be NULL)
- */
-typedef void* EcsCollider2DData[3];
+int8_t ecs_collider2d_poly(
+    EcsPolygonCollider *poly_a,
+    EcsPolygonCollider *poly_b,
+    EcsCollision2D *collision_out);
 
-int8_t EcsPhysis2d_GetCollisionInfo(EcsCollider2DData *collider_a, EcsCollider2DData *collider_b, EcsCollision2DInfo *collision_out);
+int8_t ecs_collider2d_poly_circle(
+    EcsPolygonCollider *poly,
+    EcsCircleCollider *circle,
+    EcsCollision2D *collision_out);
+
+int8_t ecs_collider2d_circle_poly(
+    EcsCircleCollider *circle,
+    EcsPolygonCollider *poly,
+    EcsCollision2D *collision_out);
+
+int8_t ecs_collider2d_circle(
+    EcsCircleCollider *circle_a,
+    EcsCircleCollider *circle_b,
+    EcsCollision2D *collision_out);
 
 #ifdef __cplusplus
 }

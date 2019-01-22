@@ -4,12 +4,6 @@
 #define AXIS_MIN(minMax) ((minMax).x)
 #define AXIS_MAX(minMax) ((minMax).y)
 
-typedef struct ColliderData {
-    EcsPoint2D *position;
-    EcsCircleCollider *circle;
-    EcsPolygonCollider *polygon;
-} ColliderData_t;
-
 static
 void get_projection(
     EcsVec2 *axis,

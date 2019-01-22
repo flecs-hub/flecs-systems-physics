@@ -5,10 +5,10 @@
 extern "C" {
 #endif
 
-typedef struct EcsCollision2D {
-    EcsVec2 normal;
-    float distance;
-} EcsCollision2D;
+typedef struct EcsPolygonCollider {
+    int8_t point_count;
+    EcsPoint2D *points;
+} EcsPolygonCollider;
 
 int8_t ecs_collider2d_poly(
     EcsPolygonCollider *poly_a,

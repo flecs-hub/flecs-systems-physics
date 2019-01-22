@@ -21,6 +21,7 @@
 #include <reflecs>
 #include <reflecs.math>
 #include <reflecs.components.transform>
+#include <reflecs.components.geometry>
 #include <reflecs.components.physics>
 
 /* Headers of private dependencies */

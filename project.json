@@ -8,6 +8,7 @@
             "reflecs",
             "reflecs.math",
             "reflecs.components.transform",
+            "reflecs.components.geometry",
             "reflecs.components.physics"
         ]
     },

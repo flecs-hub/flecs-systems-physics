@@ -2,105 +2,6 @@
 #include <string.h>
 #include <math.h>
 
-void EcsMove2D_w_Rotation(EcsRows *rows) {
-    void *row;
-    for (row = rows->first; row < rows->last; row = ecs_next(rows, row)) {
-        EcsPosition2D *p = ecs_data(rows, row, 0);
-        EcsSpeed *speed = ecs_data(rows, row, 1);
-        EcsRotation2D *r = ecs_data(rows, row, 2);
-        float x_speed = 1;
-        float y_speed = 0;
-
-        x_speed = cos(r->angle) * speed->value;
-        y_speed = sin(r->angle) * speed->value;
-
-        p->x += x_speed * rows->delta_time;
-        p->y += y_speed * rows->delta_time;
-    }
-}
-
-void EcsMove2D_w_Velocity(EcsRows *rows) {
-    void *row;
-    for (row = rows->first; row < rows->last; row = ecs_next(rows, row)) {
-        EcsPosition2D *p = ecs_data(rows, row, 0);
-        EcsSpeed *speed = ecs_data(rows, row, 1);
-        EcsVelocity2D *v = ecs_data(rows, row, 2);
-        float x_speed = v->x;
-        float y_speed = v->y;
-
-        if (speed) {
-            x_speed *= speed->value;
-            y_speed *= speed->value;
-        }
-
-        p->x += x_speed * rows->delta_time;;
-        p->y += y_speed * rows->delta_time;;
-    }
-}
-
-void EcsRotate2D(EcsRows *rows) {
-    void *row;
-    for (row = rows->first; row < rows->last; row = ecs_next(rows, row)) {
-        EcsRotation2D *r = ecs_data(rows, row, 0);
-        EcsAngularSpeed *s = ecs_data(rows, row, 1);
-        r->angle += s->value * rows->delta_time;;
-    }
-}
-
-void EcsMove3D_w_Rotation(EcsRows *rows) {
-    void *row;
-    for (row = rows->first; row < rows->last; row = ecs_next(rows, row)) {
-        EcsPosition3D *p = ecs_data(rows, row, 0);
-        EcsSpeed *speed = ecs_data(rows, row, 1);
-        EcsRotation3D *r = ecs_data(rows, row, 2);
-        float x_speed = cos(r->z) * sin(r->y) * speed->value;
-        float y_speed = cos(r->x) * sin(r->z) * speed->value;
-        float z_speed = cos(r->y) * sin(r->x) * speed->value;
-        p->x += x_speed * rows->delta_time;;
-        p->y += y_speed * rows->delta_time;;
-        p->z += z_speed * rows->delta_time;;
-    }
-}
-
-void EcsMove3D_w_Velocity(EcsRows *rows) {
-    void *row;
-    for (row = rows->first; row < rows->last; row = ecs_next(rows, row)) {
-        EcsPosition3D *p = ecs_data(rows, row, 0);
-        EcsSpeed *speed = ecs_data(rows, row, 1);
-        EcsVelocity3D *v = ecs_data(rows, row, 2);
-        float x_speed = v->x;
-        float y_speed = v->y;
-        float z_speed = v->z;
-
-        if (speed) {
-            x_speed *= speed->value;
-            y_speed *= speed->value;
-            z_speed *= speed->value;
-        }
-
-        p->x += x_speed * rows->delta_time;;
-        p->y += y_speed * rows->delta_time;;
-    }
-}
-
-void EcsRotate3D(EcsRows *rows) {
-    void *row;
-    for (row = rows->first; row < rows->last; row = ecs_next(rows, row)) {
-        EcsRotation3D *r = ecs_data(rows, row, 0);
-        EcsAngularSpeed *s = ecs_data(rows, row, 1);
-        EcsAngularVelocity *v = ecs_data(rows, row, 2);
-        float speed = 1;
-
-        if (s) {
-            speed = s->value;
-        }
-
-        r->x += v->x * speed * rows->delta_time;;
-        r->y += v->y * speed * rows->delta_time;;
-        r->z += v->z * speed * rows->delta_time;;
-    }
-}
-
 void EcsSystemsPhysics(
     EcsWorld *world,
     int flags,
@@ -111,6 +12,8 @@ void EcsSystemsPhysics(
     bool do_3d = !flags || flags & ECS_3D;
 
     memset(handles, 0, sizeof(EcsSystemsPhysicsHandles));
+
+    ECS_IMPORT(world, EcsComponentsGeometry, flags);
 
     if (do_2d) {
         ECS_SYSTEM(world, EcsMove2D_w_Rotation, EcsOnFrame,
@@ -124,10 +27,43 @@ void EcsSystemsPhysics(
 
         ECS_FAMILY(world, EcsMove2D, EcsMove2D_w_Rotation, EcsMove2D_w_Velocity);
 
+        /* Auto-add colliders to geometry entities that have EcsCollider */
+
+        /* TODO: when EcsCollider is defined on a prefab, colliders should be
+         *       added to prefab as well instead of the derived entity */
+
+        ECS_SYSTEM(world, EcsAddColliderForSquare,    EcsOnLoad, EcsSquare, EcsCollider, !EcsPolygon8Collider);
+        ECS_SYSTEM(world, EcsAddColliderForRectangle, EcsOnLoad, EcsRectangle, EcsCollider, !EcsPolygon8Collider);
+        ECS_SYSTEM(world, EcsAddColliderForCircle,    EcsOnLoad, EcsCircle, EcsCollider, !EcsCircleCollider);
+
+        /* Add world space colliders */
+        ECS_SYSTEM(world, EcsAddPolygon8ColliderWorld,  EcsOnLoad, EcsPolygon8Collider, !EcsPolygon8ColliderWorld);
+        ECS_SYSTEM(world, EcsAddCircleColliderWorld,    EcsOnLoad, EcsCircleCollider, !EcsCircleColliderWorld);
+
+        /* TODO: world space colliders should only be added to entities, never
+         *       to prefabs */
+
+        /* Transform colliders to world space */
+        ECS_SYSTEM(world, EcsTransformPolygon8Colliders,  EcsPostFrame, EcsMatTransform2D, EcsPolygon8Collider, EcsPolygon8ColliderWorld);
+        ECS_SYSTEM(world, EcsTransformCircleColliders,    EcsPostFrame, EcsMatTransform2D, EcsCircleCollider, EcsCircleColliderWorld);
+
+        /* Do collision testing */
+        ECS_SYSTEM(world, EcsTestColliders, EcsOnDemand,
+            EcsPolygon8ColliderWorld | EcsCircleColliderWorld,
+            ID.EcsPolygon8ColliderWorld,
+            ID.EcsCircleColliderWorld,
+            ID.EcsCollision2D);
+        ECS_SYSTEM(world, EcsCleanCollisions, EcsPostFrame, EcsCollision2D);
+        ECS_SYSTEM(world, EcsWalkColliders, EcsPostFrame, EcsPolygon8ColliderWorld | EcsCircleColliderWorld, ID.EcsTestColliders);
+
         ecs_add(world, EcsMove2D_w_Rotation_h, EcsHidden_h);
         ecs_add(world, EcsMove2D_w_Velocity_h, EcsHidden_h);
         ecs_add(world, EcsRotate2D_h, EcsHidden_h);
         ecs_add(world, EcsMove2D_h, EcsHidden_h);
+
+        ecs_add(world, EcsAddColliderForSquare_h, EcsHidden_h);
+        ecs_add(world, EcsAddColliderForRectangle_h, EcsHidden_h);
+        ecs_add(world, EcsAddColliderForCircle_h, EcsHidden_h);
 
         handles->Move2D_w_Rotation = EcsMove2D_w_Rotation_h;
         handles->Move2D_w_Velocity = EcsMove2D_w_Velocity_h;
@@ -177,7 +113,4 @@ void EcsSystemsPhysics(
         handles->Move = EcsMove_h;
         handles->Rotate = EcsRotate_h;
     }
-
-    ecs_enable(world, handles->Move, false);
-    ecs_enable(world, handles->Rotate, false);
 }

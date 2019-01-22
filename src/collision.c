@@ -18,7 +18,7 @@ void add_square_collider(
             {w, -h},
             {w, h},
             {-w, h},
-            {-w, -w}
+            {-w, -h}
         },
         .point_count = 5
     });
@@ -49,6 +49,7 @@ void EcsAddColliderForRectangle(EcsRows *rows) {
 
         float w = s->width / 2.0;
         float h = s->height / 2.0;
+
         add_square_collider(world, entity, EcsPolygon8Collider_h, w, h);
     }
 }
@@ -80,8 +81,6 @@ void EcsAddPolygon8ColliderWorld(EcsRows *rows) {
     for (row = rows->first; row < rows->last; row = ecs_next(rows, row)) {
         EcsEntity entity = ecs_entity(rows, row, ECS_ROW_ENTITY);
         EcsPolygon8Collider *collider = ecs_data(rows, row, 0);
-
-        printf("Add polygon collider for world\n");
         ecs_set_ptr(world, entity, EcsPolygon8ColliderWorld_h, collider);
     }
 }
@@ -94,8 +93,6 @@ void EcsAddCircleColliderWorld(EcsRows *rows) {
     for (row = rows->first; row < rows->last; row = ecs_next(rows, row)) {
         EcsEntity entity = ecs_entity(rows, row, ECS_ROW_ENTITY);
         EcsCircleCollider *collider = ecs_data(rows, row, 0);
-
-        printf("Add circle collider for world\n");
         ecs_set_ptr(world, entity, EcsCircleColliderWorld_h, collider);
     }
 }

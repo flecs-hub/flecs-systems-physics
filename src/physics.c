@@ -25,6 +25,8 @@ void EcsSystemsPhysics(
         ECS_SYSTEM(world, EcsRotate2D, EcsOnFrame,
             EcsRotation2D, EcsAngularSpeed);
 
+        ECS_SYSTEM(world, EcsAddRotate2D, EcsOnLoad, EcsAngularSpeed, !EcsRotation2D);
+
         ECS_FAMILY(world, EcsMove2D, EcsMove2D_w_Rotation, EcsMove2D_w_Velocity);
 
         /* Auto-add colliders to geometry entities that have EcsCollider */

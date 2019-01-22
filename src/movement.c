@@ -2,6 +2,15 @@
 #include <string.h>
 #include <math.h>
 
+void EcsAddRotate2D(EcsRows *rows) {
+    EcsEntity EcsRotation2D_h = ecs_component(rows, 1);
+    void *row;
+    for (row = rows->first; row < rows->last; row = ecs_next(rows, row)) {
+        EcsEntity e = ecs_entity(rows, row, 0);
+        ecs_set(rows->world, e, EcsRotation2D, {0});
+    }
+}
+
 void EcsMove2D_w_Rotation(EcsRows *rows) {
     void *row;
     for (row = rows->first; row < rows->last; row = ecs_next(rows, row)) {

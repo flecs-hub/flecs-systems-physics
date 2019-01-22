@@ -25,9 +25,15 @@ void EcsSystemsPhysics(
         ECS_SYSTEM(world, EcsRotate2D, EcsOnFrame,
             EcsRotation2D, EcsAngularSpeed);
 
+        ECS_FAMILY(world, EcsMove2D, EcsMove2D_w_Rotation, EcsMove2D_w_Velocity);
+
         ECS_SYSTEM(world, EcsAddRotate2D, EcsOnLoad, EcsAngularSpeed, !EcsRotation2D);
 
-        ECS_FAMILY(world, EcsMove2D, EcsMove2D_w_Rotation, EcsMove2D_w_Velocity);
+        ecs_add(world, EcsMove2D_w_Rotation_h, EcsHidden_h);
+        ecs_add(world, EcsMove2D_w_Velocity_h, EcsHidden_h);
+        ecs_add(world, EcsRotate2D_h, EcsHidden_h);
+        ecs_add(world, EcsMove2D_h, EcsHidden_h);
+        ecs_add(world, EcsAddRotate2D_h, EcsHidden_h);
 
         /* Auto-add colliders to geometry entities that have EcsCollider */
 
@@ -37,10 +43,15 @@ void EcsSystemsPhysics(
         ECS_SYSTEM(world, EcsAddColliderForSquare,    EcsOnLoad, EcsSquare, EcsCollider, !EcsPolygon8Collider);
         ECS_SYSTEM(world, EcsAddColliderForRectangle, EcsOnLoad, EcsRectangle, EcsCollider, !EcsPolygon8Collider);
         ECS_SYSTEM(world, EcsAddColliderForCircle,    EcsOnLoad, EcsCircle, EcsCollider, !EcsCircleCollider);
+        ecs_add(world, EcsAddColliderForSquare_h, EcsHidden_h);
+        ecs_add(world, EcsAddColliderForRectangle_h, EcsHidden_h);
+        ecs_add(world, EcsAddColliderForCircle_h, EcsHidden_h);
 
         /* Add world space colliders */
         ECS_SYSTEM(world, EcsAddPolygon8ColliderWorld,  EcsOnLoad, EcsPolygon8Collider, !EcsPolygon8ColliderWorld);
         ECS_SYSTEM(world, EcsAddCircleColliderWorld,    EcsOnLoad, EcsCircleCollider, !EcsCircleColliderWorld);
+        ecs_add(world, EcsAddPolygon8ColliderWorld_h, EcsHidden_h);
+        ecs_add(world, EcsAddCircleColliderWorld_h, EcsHidden_h);
 
         /* TODO: world space colliders should only be added to entities, never
          *       to prefabs */
@@ -48,6 +59,8 @@ void EcsSystemsPhysics(
         /* Transform colliders to world space */
         ECS_SYSTEM(world, EcsTransformPolygon8Colliders,  EcsPostFrame, EcsMatTransform2D, EcsPolygon8Collider, EcsPolygon8ColliderWorld);
         ECS_SYSTEM(world, EcsTransformCircleColliders,    EcsPostFrame, EcsMatTransform2D, EcsCircleCollider, EcsCircleColliderWorld);
+        ecs_add(world, EcsTransformPolygon8Colliders_h, EcsHidden_h);
+        ecs_add(world, EcsTransformCircleColliders_h, EcsHidden_h);
 
         /* Do collision testing */
         ECS_SYSTEM(world, EcsTestColliders, EcsOnDemand,
@@ -57,15 +70,9 @@ void EcsSystemsPhysics(
             ID.EcsCollision2D);
         ECS_SYSTEM(world, EcsCleanCollisions, EcsPostFrame, EcsCollision2D);
         ECS_SYSTEM(world, EcsWalkColliders, EcsPostFrame, EcsPolygon8ColliderWorld | EcsCircleColliderWorld, ID.EcsTestColliders);
-
-        ecs_add(world, EcsMove2D_w_Rotation_h, EcsHidden_h);
-        ecs_add(world, EcsMove2D_w_Velocity_h, EcsHidden_h);
-        ecs_add(world, EcsRotate2D_h, EcsHidden_h);
-        ecs_add(world, EcsMove2D_h, EcsHidden_h);
-
-        ecs_add(world, EcsAddColliderForSquare_h, EcsHidden_h);
-        ecs_add(world, EcsAddColliderForRectangle_h, EcsHidden_h);
-        ecs_add(world, EcsAddColliderForCircle_h, EcsHidden_h);
+        ecs_add(world, EcsTestColliders_h, EcsHidden_h);
+        ecs_add(world, EcsCleanCollisions_h, EcsHidden_h);
+        ecs_add(world, EcsWalkColliders_h, EcsHidden_h);
 
         handles->Move2D_w_Rotation = EcsMove2D_w_Rotation_h;
         handles->Move2D_w_Velocity = EcsMove2D_w_Velocity_h;

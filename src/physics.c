@@ -25,15 +25,15 @@ void EcsSystemsPhysics(
         ECS_SYSTEM(world, EcsRotate2D, EcsOnFrame,
             EcsRotation2D, EcsAngularSpeed);
 
-        ECS_FAMILY(world, EcsMove2D, EcsMove2D_w_Rotation, EcsMove2D_w_Velocity);
-
         ECS_SYSTEM(world, EcsAddRotate2D, EcsOnLoad, EcsAngularSpeed, !EcsRotation2D);
+
+        ECS_FAMILY(world, EcsMove2D, EcsMove2D_w_Rotation, EcsMove2D_w_Velocity, EcsRotate2D);
 
         ecs_add(world, EcsMove2D_w_Rotation_h, EcsHidden_h);
         ecs_add(world, EcsMove2D_w_Velocity_h, EcsHidden_h);
+        ecs_add(world, EcsAddRotate2D_h, EcsHidden_h);
         ecs_add(world, EcsRotate2D_h, EcsHidden_h);
         ecs_add(world, EcsMove2D_h, EcsHidden_h);
-        ecs_add(world, EcsAddRotate2D_h, EcsHidden_h);
 
         /* Auto-add colliders to geometry entities that have EcsCollider */
 
@@ -68,11 +68,15 @@ void EcsSystemsPhysics(
             ID.EcsPolygon8ColliderWorld,
             ID.EcsCircleColliderWorld,
             ID.EcsCollision2D);
+
         ECS_SYSTEM(world, EcsCleanCollisions, EcsPostFrame, EcsCollision2D);
         ECS_SYSTEM(world, EcsWalkColliders, EcsPostFrame, EcsPolygon8ColliderWorld | EcsCircleColliderWorld, ID.EcsTestColliders);
         ecs_add(world, EcsTestColliders_h, EcsHidden_h);
         ecs_add(world, EcsCleanCollisions_h, EcsHidden_h);
         ecs_add(world, EcsWalkColliders_h, EcsHidden_h);
+
+        ECS_FAMILY(world, EcsCollide,
+            EcsTransformPolygon8Colliders, EcsTransformCircleColliders, EcsTestColliders, EcsWalkColliders, EcsCleanCollisions);
 
         handles->Move2D_w_Rotation = EcsMove2D_w_Rotation_h;
         handles->Move2D_w_Velocity = EcsMove2D_w_Velocity_h;
@@ -90,7 +94,7 @@ void EcsSystemsPhysics(
         ECS_SYSTEM(world, EcsRotate3D, EcsOnFrame,
             EcsRotation3D, ?EcsAngularSpeed, EcsAngularVelocity);
 
-        ECS_FAMILY(world, EcsMove3D, EcsMove3D_w_Rotation, EcsMove3D_w_Velocity);
+        ECS_FAMILY(world, EcsMove3D, EcsMove3D_w_Rotation, EcsMove3D_w_Velocity, EcsRotate3D);
 
         ecs_add(world, EcsMove3D_w_Rotation_h, EcsHidden_h);
         ecs_add(world, EcsMove3D_w_Velocity_h, EcsHidden_h);
@@ -105,21 +109,15 @@ void EcsSystemsPhysics(
 
     if (do_2d && do_3d) {
         ECS_FAMILY(world, EcsMove, EcsMove2D, EcsMove3D);
-        ECS_FAMILY(world, EcsRotate, Rotate2D, EcsRotate3D);
 
         handles->Move = EcsMove_h;
-        handles->Rotate = EcsRotate_h;
     } else if (!do_2d) {
         ECS_FAMILY(world, EcsMove, EcsMove3D);
-        ECS_FAMILY(world, EcsRotate, EcsRotate3D);
 
         handles->Move = EcsMove_h;
-        handles->Rotate = EcsRotate_h;
     } else if (!do_3d) {
         ECS_FAMILY(world, EcsMove, EcsMove2D);
-        ECS_FAMILY(world, EcsRotate, EcsRotate2D);
 
         handles->Move = EcsMove_h;
-        handles->Rotate = EcsRotate_h;
     }
 }

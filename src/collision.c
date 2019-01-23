@@ -166,9 +166,6 @@ void EcsTestColliders(EcsRows *rows) {
                 EcsPolygonCollider c2 = poly8_to_poly(ecs_data(rows, row, 0));
                 EcsEntity entity = ecs_entity(rows, row, ECS_ROW_ENTITY);
 
-                if (entity == param->entity)
-                    continue;
-
                 if (ecs_collider2d_poly(&c1, &c2, &collision)) {
                     create_collision(world, entity, param->entity, &collision,
                                      EcsCollision2D_h);
@@ -178,9 +175,6 @@ void EcsTestColliders(EcsRows *rows) {
             for (row = rows->first; row < rows->last; row = ecs_next(rows, row)) {
                 EcsCircleColliderWorld *c2 = ecs_data(rows, row, 0);
                 EcsEntity entity = ecs_entity(rows, row, ECS_ROW_ENTITY);
-
-                if (entity == param->entity)
-                    continue;
 
                 if (ecs_collider2d_poly_circle(&c1, c2, &collision)) {
                     create_collision(world, entity, param->entity, &collision,
@@ -195,9 +189,6 @@ void EcsTestColliders(EcsRows *rows) {
                 EcsPolygonCollider c2 = poly8_to_poly(ecs_data(rows, row, 0));
                 EcsEntity entity = ecs_entity(rows, row, ECS_ROW_ENTITY);
 
-                if (entity == param->entity)
-                    continue;
-
                 if (ecs_collider2d_circle_poly(c1, &c2, &collision)) {
                     create_collision(world, entity, param->entity, &collision,
                                      EcsCollision2D_h);
@@ -207,9 +198,6 @@ void EcsTestColliders(EcsRows *rows) {
             for (row = rows->first; row < rows->last; row = ecs_next(rows, row)) {
                 EcsCircleColliderWorld *c2 = ecs_data(rows, row, 0);
                 EcsEntity entity = ecs_entity(rows, row, ECS_ROW_ENTITY);
-
-                if (entity == param->entity)
-                    continue;
 
                 if (ecs_collider2d_circle(c1, c2, &collision)) {
                     create_collision(world, entity, param->entity, &collision,
@@ -226,7 +214,7 @@ void EcsWalkColliders(EcsRows *rows) {
     EcsEntity EcsTestColliders_h = ecs_component(rows, 1);
     void *row;
 
-    uint32_t n = 1;
+    uint32_t n = rows->start_index;
     for (row = rows->first; row < rows->last; row = ecs_next(rows, row)) {
         EcsEntity entity = ecs_entity(rows, row, ECS_ROW_ENTITY);
         void *data = ecs_data(rows, row, 0);
@@ -240,7 +228,7 @@ void EcsWalkColliders(EcsRows *rows) {
             world,
             EcsTestColliders_h,
             rows->delta_time,
-            n,
+            n + 1,
             0,
             0,
             &param);

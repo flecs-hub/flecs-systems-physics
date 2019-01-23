@@ -15,10 +15,10 @@ typedef struct EcsSystemsPhysicsHandles {
    EcsEntity Move3D_w_Rotation;
    EcsEntity Move3D_w_Velocity;
    EcsEntity Move3D;
-   EcsEntity Move;
    EcsEntity Rotate2D;
    EcsEntity Rotate3D;
-   EcsEntity Rotate;
+   EcsEntity Move;
+   EcsEntity Collide;
 } EcsSystemsPhysicsHandles;
 
 void EcsSystemsPhysics(
@@ -33,10 +33,10 @@ void EcsSystemsPhysics(
     EcsDeclareHandle(handles, Move3D_w_Rotation);\
     EcsDeclareHandle(handles, Move3D_w_Velocity);\
     EcsDeclareHandle(handles, Move3D);\
-    EcsDeclareHandle(handles, Move);\
     EcsDeclareHandle(handles, Rotate2D);\
     EcsDeclareHandle(handles, Rotate3D);\
-    EcsDeclareHandle(handles, Rotate);
+    EcsDeclareHandle(handles, Move);\
+    EcsDeclareHandle(handles, Collide);
 
 #ifdef __cplusplus
 }

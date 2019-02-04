@@ -9,7 +9,8 @@
             "reflecs.math",
             "reflecs.components.transform",
             "reflecs.components.geometry",
-            "reflecs.components.physics"
+            "reflecs.components.physics",
+            "reflecs.systems.transform"
         ]
     },
     "lang.c": {

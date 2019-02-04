@@ -12,8 +12,10 @@ void EcsSystemsPhysics(
     bool do_3d = !flags || flags & ECS_3D;
 
     memset(handles, 0, sizeof(EcsSystemsPhysicsHandles));
-
+    
+    ECS_IMPORT(world, EcsComponentsPhysics, flags);
     ECS_IMPORT(world, EcsComponentsGeometry, flags);
+    ECS_IMPORT(world, EcsSystemsTransform, flags);
 
     if (do_2d) {
         ECS_SYSTEM(world, EcsMove2D_w_Rotation, EcsOnFrame,

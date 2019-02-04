@@ -23,6 +23,7 @@
 #include <reflecs.components.transform>
 #include <reflecs.components.geometry>
 #include <reflecs.components.physics>
+#include <reflecs.systems.transform>
 
 /* Headers of private dependencies */
 #ifdef REFLECS_SYSTEMS_PHYSICS_IMPL

@@ -5,7 +5,7 @@
 /* -- Automatically add colliders to geometry entities with EcsCollider -- */
 
 static
-void add_square_collider(
+void add_rect_collider(
     EcsWorld *world,
     EcsEntity entity,
     EcsEntity EcsPolygon8Collider_h,
@@ -34,7 +34,7 @@ void EcsAddColliderForSquare(EcsRows *rows) {
         EcsSquare *s = ecs_data(rows, row, 0);
 
         float w = s->size / 2.0;
-        add_square_collider(world, entity, EcsPolygon8Collider_h, w, w);
+        add_rect_collider(world, entity, EcsPolygon8Collider_h, w, w);
     }
 }
 
@@ -50,7 +50,7 @@ void EcsAddColliderForRectangle(EcsRows *rows) {
         float w = s->width / 2.0;
         float h = s->height / 2.0;
 
-        add_square_collider(world, entity, EcsPolygon8Collider_h, w, h);
+        add_rect_collider(world, entity, EcsPolygon8Collider_h, w, h);
     }
 }
 
@@ -129,7 +129,7 @@ typedef struct TestColliderParam {
 
 static
 EcsPolygonCollider poly8_to_poly(
-    EcsPolygon8Collider *collider)
+    EcsPolygon8ColliderWorld *collider)
 {
     return (EcsPolygonCollider) {
         .point_count = collider->point_count,
@@ -144,8 +144,14 @@ void create_collision(
     EcsCollision2D *collision_data,
     EcsEntity EcsCollision2D_h)
 {
-    collision_data->entity_1 = entity_1;
-    collision_data->entity_2 = entity_2;
+    if (entity_2 > entity_1) {
+        collision_data->entity_1 = entity_1;
+        collision_data->entity_2 = entity_2;
+    } else {
+        collision_data->entity_1 = entity_2;
+        collision_data->entity_2 = entity_1;
+    }
+
     ecs_set_ptr(world, 0, EcsCollision2D_h, collision_data);
 }
 
@@ -215,6 +221,7 @@ void EcsWalkColliders(EcsRows *rows) {
     void *row;
 
     uint32_t n = rows->start_index;
+    
     for (row = rows->first; row < rows->last; row = ecs_next(rows, row)) {
         EcsEntity entity = ecs_entity(rows, row, ECS_ROW_ENTITY);
         void *data = ecs_data(rows, row, 0);

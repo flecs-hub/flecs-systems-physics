@@ -1,5 +1,5 @@
-#ifndef REFLECS_SYSTEMS_PHYSICS_2D_H
-#define REFLECS_SYSTEMS_PHYSICS_2D_H
+#ifndef FLECS_SYSTEMS_PHYSICS_2D_H
+#define FLECS_SYSTEMS_PHYSICS_2D_H
 
 #ifdef __cplusplus
 extern "C" {

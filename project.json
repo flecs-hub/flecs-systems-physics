@@ -1,16 +1,16 @@
 {
-    "id": "reflecs.systems.physics",
+    "id": "flecs.systems.physics",
     "type": "package",
     "value": {
         "author": "Roberto Flores, Sander Mertens",
-        "description": "Physics systems for reflecs",
+        "description": "Physics systems for flecs",
         "use": [
-            "reflecs",
-            "reflecs.math",
-            "reflecs.components.transform",
-            "reflecs.components.geometry",
-            "reflecs.components.physics",
-            "reflecs.systems.transform"
+            "flecs",
+            "flecs.math",
+            "flecs.components.transform",
+            "flecs.components.geometry",
+            "flecs.components.physics",
+            "flecs.systems.transform"
         ]
     },
     "lang.c": {

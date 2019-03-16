@@ -1,5 +1,5 @@
-#ifndef REFLECS_SYSTEMS_PHYSICS_H
-#define REFLECS_SYSTEMS_PHYSICS_H
+#ifndef FLECS_SYSTEMS_PHYSICS_H
+#define FLECS_SYSTEMS_PHYSICS_H
 
 #include "bake_config.h"
 #include "physics_2d.h"
@@ -9,16 +9,16 @@ extern "C" {
 #endif
 
 typedef struct EcsSystemsPhysicsHandles {
-   EcsEntity Move2D_w_Rotation;
-   EcsEntity Move2D_w_Velocity;
-   EcsEntity Move2D;
-   EcsEntity Move3D_w_Rotation;
-   EcsEntity Move3D_w_Velocity;
-   EcsEntity Move3D;
-   EcsEntity Rotate2D;
-   EcsEntity Rotate3D;
-   EcsEntity Move;
-   EcsEntity Collide;
+   ECS_DECLARE_SYSTEM(EcsMove2D_w_Rotation);
+   ECS_DECLARE_SYSTEM(EcsMove2D_w_Velocity);
+   ECS_DECLARE_COMPONENT(EcsMove2D);
+   ECS_DECLARE_SYSTEM(EcsMove3D_w_Rotation);
+   ECS_DECLARE_SYSTEM(EcsMove3D_w_Velocity);
+   ECS_DECLARE_COMPONENT(EcsMove3D);
+   ECS_DECLARE_SYSTEM(EcsRotate2D);
+   ECS_DECLARE_SYSTEM(EcsRotate3D);
+   ECS_DECLARE_COMPONENT(EcsMove);
+   ECS_DECLARE_SYSTEM(EcsCollide);
 } EcsSystemsPhysicsHandles;
 
 void EcsSystemsPhysics(
@@ -26,17 +26,17 @@ void EcsSystemsPhysics(
     int flags,
     void *handles_out);
 
-#define EcsSystemsPhysics_DeclareHandles(handles)\
-    EcsDeclareHandle(handles, Move2D_w_Rotation);\
-    EcsDeclareHandle(handles, Move2D_w_Velocity);\
-    EcsDeclareHandle(handles, Move2D);\
-    EcsDeclareHandle(handles, Move3D_w_Rotation);\
-    EcsDeclareHandle(handles, Move3D_w_Velocity);\
-    EcsDeclareHandle(handles, Move3D);\
-    EcsDeclareHandle(handles, Rotate2D);\
-    EcsDeclareHandle(handles, Rotate3D);\
-    EcsDeclareHandle(handles, Move);\
-    EcsDeclareHandle(handles, Collide);
+#define EcsSystemsPhysics_ImportHandles(handles)\
+    ECS_IMPORT_SYSTEM(handles, ECSMove2D_w_Rotation);\
+    ECS_IMPORT_SYSTEM(handles, ECSMove2D_w_Velocity);\
+    ECS_IMPORT_SYSTEM(handles, ECSMove2D);\
+    ECS_IMPORT_SYSTEM(handles, ECSMove3D_w_Rotation);\
+    ECS_IMPORT_SYSTEM(handles, ECSMove3D_w_Velocity);\
+    ECS_IMPORT_SYSTEM(handles, ECSMove3D);\
+    ECS_IMPORT_SYSTEM(handles, ECSRotate2D);\
+    ECS_IMPORT_SYSTEM(handles, ECSRotate3D);\
+    ECS_IMPORT_SYSTEM(handles, ECSMove);\
+    ECS_IMPORT_SYSTEM(handles, ECSCollide);
 
 #ifdef __cplusplus
 }

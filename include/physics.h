@@ -27,16 +27,16 @@ void EcsSystemsPhysics(
     void *handles_out);
 
 #define EcsSystemsPhysics_ImportHandles(handles)\
-    ECS_IMPORT_SYSTEM(handles, ECSMove2D_w_Rotation);\
-    ECS_IMPORT_SYSTEM(handles, ECSMove2D_w_Velocity);\
-    ECS_IMPORT_SYSTEM(handles, ECSMove2D);\
-    ECS_IMPORT_SYSTEM(handles, ECSMove3D_w_Rotation);\
-    ECS_IMPORT_SYSTEM(handles, ECSMove3D_w_Velocity);\
-    ECS_IMPORT_SYSTEM(handles, ECSMove3D);\
-    ECS_IMPORT_SYSTEM(handles, ECSRotate2D);\
-    ECS_IMPORT_SYSTEM(handles, ECSRotate3D);\
-    ECS_IMPORT_SYSTEM(handles, ECSMove);\
-    ECS_IMPORT_SYSTEM(handles, ECSCollide);
+    ECS_IMPORT_SYSTEM(handles, EcsMove2D_w_Rotation);\
+    ECS_IMPORT_SYSTEM(handles, EcsMove2D_w_Velocity);\
+    ECS_IMPORT_COMPONENT(handles, EcsMove2D);\
+    ECS_IMPORT_SYSTEM(handles, EcsMove3D_w_Rotation);\
+    ECS_IMPORT_SYSTEM(handles, EcsMove3D_w_Velocity);\
+    ECS_IMPORT_COMPONENT(handles, EcsMove3D);\
+    ECS_IMPORT_SYSTEM(handles, EcsRotate2D);\
+    ECS_IMPORT_SYSTEM(handles, EcsRotate3D);\
+    ECS_IMPORT_COMPONENT(handles, EcsMove);\
+    ECS_IMPORT_SYSTEM(handles, EcsCollide);
 
 #ifdef __cplusplus
 }

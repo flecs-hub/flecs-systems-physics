@@ -139,6 +139,8 @@ void create_collision(
     EcsCollision2D *collision_data,
     EcsType TEcsCollision2D)
 {
+    ecs_assert(entity_1 != entity_2, ECS_INTERNAL_ERROR, NULL);
+
     if (entity_2 > entity_1) {
         collision_data->entity_1 = entity_1;
         collision_data->entity_2 = entity_2;
@@ -209,11 +211,12 @@ void EcsTestColliders(EcsRows *rows) {
 void EcsWalkColliders(EcsRows *rows) {
     EcsWorld *world = rows->world;
     EcsType collider = ecs_column_type(rows, 1);
-    EcsType TEcsTestColliders = ecs_column_type(rows, 2);
+    EcsEntity EcsTestColliders = ecs_column_component(rows, 2);
     int i;
     
     for (i = rows->begin; i < rows->end; i ++) {
         void *data = _ecs_field(rows, i, 1, false);
+        
         TestColliderParam param = {
             .entity = rows->entities[i],
             .collider_component = collider,
@@ -222,9 +225,9 @@ void EcsWalkColliders(EcsRows *rows) {
 
         ecs_run_w_filter(
             world,
-            TEcsTestColliders,
+            EcsTestColliders,
             rows->delta_time,
-            i + 1,
+            rows->index_offset + i + 1,
             0,
             0,
             &param);

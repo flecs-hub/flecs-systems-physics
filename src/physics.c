@@ -60,7 +60,7 @@ void EcsSystemsPhysics(
             ID.EcsCircleColliderWorld,
             ID.EcsCollision2D, SYSTEM.EcsHidden);
 
-        ECS_SYSTEM(world, EcsCleanCollisions, EcsPostFrame, EcsCollision2D, SYSTEM.EcsHidden);
+        ECS_SYSTEM(world, EcsCleanCollisions, EcsPreFrame, EcsCollision2D, SYSTEM.EcsHidden);
         ECS_SYSTEM(world, EcsWalkColliders, EcsPostFrame, EcsPolygon8ColliderWorld | EcsCircleColliderWorld, ID.EcsTestColliders, SYSTEM.EcsHidden);
 
         ECS_TYPE(world, EcsCollide,

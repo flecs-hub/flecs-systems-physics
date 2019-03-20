@@ -6,14 +6,14 @@ void EcsAddRotate2D(EcsRows *rows) {
     EcsType TEcsRotation2D = ecs_column_type(rows, 2);
 
     int i;
-    for (i = rows->begin; i < rows->end; i ++) {
+    for (i = 0; i < rows->count; i ++) {
         ecs_set(rows->world, rows->entities[i], EcsRotation2D, {0});
     }
 }
 
 void EcsMove2D_w_Rotation(EcsRows *rows) {
     int i;
-    for (i = rows->begin; i < rows->end; i ++) {
+    for (i = 0; i < rows->count; i ++) {
         EcsPosition2D *p = ecs_field(rows, EcsPosition2D, i, 1);
         EcsSpeed *speed = ecs_field(rows, EcsSpeed, i, 2);
         EcsRotation2D *r = ecs_field(rows, EcsRotation2D, i, 3);
@@ -30,7 +30,7 @@ void EcsMove2D_w_Rotation(EcsRows *rows) {
 
 void EcsMove2D_w_Velocity(EcsRows *rows) {
     int i;
-    for (i = rows->begin; i < rows->end; i ++) {
+    for (i = 0; i < rows->count; i ++) {
         EcsPosition2D *p = ecs_field(rows, EcsPosition2D, i, 1);
         EcsSpeed *speed = ecs_field(rows, EcsSpeed, i, 2);
         EcsVelocity2D *v = ecs_field(rows, EcsVelocity2D, i, 3);
@@ -49,7 +49,7 @@ void EcsMove2D_w_Velocity(EcsRows *rows) {
 
 void EcsRotate2D(EcsRows *rows) {
     int i;
-    for (i = rows->begin; i < rows->end; i ++) {
+    for (i = 0; i < rows->count; i ++) {
         EcsRotation2D *r = ecs_field(rows, EcsRotation2D, i, 1);
         EcsAngularSpeed *s = ecs_field(rows, EcsAngularSpeed, i, 2);
         r->angle += s->value * rows->delta_time;;
@@ -58,7 +58,7 @@ void EcsRotate2D(EcsRows *rows) {
 
 void EcsMove3D_w_Rotation(EcsRows *rows) {
     int i;
-    for (i = rows->begin; i < rows->end; i ++) {
+    for (i = 0; i < rows->count; i ++) {
         EcsPosition3D *p = ecs_field(rows, EcsPosition3D, i, 1);
         EcsSpeed *speed = ecs_field(rows, EcsSpeed, i, 2);
         EcsRotation3D *r = ecs_field(rows, EcsRotation3D, i, 3);
@@ -73,7 +73,7 @@ void EcsMove3D_w_Rotation(EcsRows *rows) {
 
 void EcsMove3D_w_Velocity(EcsRows *rows) {
     int i;
-    for (i = rows->begin; i < rows->end; i ++) {
+    for (i = 0; i < rows->count; i ++) {
         EcsPosition3D *p = ecs_field(rows, EcsPosition3D, i, 1);
         EcsSpeed *speed = ecs_field(rows, EcsSpeed, i, 2);
         EcsVelocity3D *v = ecs_field(rows, EcsVelocity3D, i, 3);
@@ -94,7 +94,7 @@ void EcsMove3D_w_Velocity(EcsRows *rows) {
 
 void EcsRotate3D(EcsRows *rows) {
     int i;
-    for (i = rows->begin; i < rows->end; i ++) {
+    for (i = 0; i < rows->count; i ++) {
         EcsRotation3D *r = ecs_field(rows, EcsRotation3D, i, 1);
         EcsAngularSpeed *s = ecs_field(rows, EcsAngularSpeed, i, 2);
         EcsAngularVelocity *v = ecs_field(rows, EcsAngularVelocity, i, 3);

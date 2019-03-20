@@ -29,7 +29,7 @@ void EcsAddColliderForSquare(EcsRows *rows) {
     EcsType TEcsPolygon8Collider = ecs_column_type(rows, 3);
 
     int i;
-    for (i = rows->begin; i < rows->end; i ++) {
+    for (i = 0; i < rows->count; i ++) {
         EcsSquare *s = ecs_field(rows, EcsSquare, i, 1);
 
         float w = s->size / 2.0;
@@ -42,7 +42,7 @@ void EcsAddColliderForRectangle(EcsRows *rows) {
     EcsType TEcsPolygon8Collider = ecs_column_type(rows, 3);
 
     int i;
-    for (i = rows->begin; i < rows->end; i ++) {
+    for (i = 0; i < rows->count; i ++) {
         EcsRectangle *s = ecs_field(rows, EcsRectangle, i, 1);
 
         float w = s->width / 2.0;
@@ -57,7 +57,7 @@ void EcsAddColliderForCircle(EcsRows *rows) {
     EcsType TEcsCircleCollider = ecs_column_type(rows, 3);
 
     int i;
-    for (i = rows->begin; i < rows->end; i ++) {
+    for (i = 0; i < rows->count; i ++) {
         EcsCircle *s = ecs_field(rows, EcsCircle, i, 1);
 
         ecs_set(world, rows->entities[i], EcsCircleCollider, {
@@ -75,7 +75,7 @@ void EcsAddPolygon8ColliderWorld(EcsRows *rows) {
     EcsType TEcsPolygon8ColliderWorld = ecs_column_type(rows, 2);
 
     int i;
-    for (i = rows->begin; i < rows->end; i ++) {
+    for (i = 0; i < rows->count; i ++) {
         EcsPolygon8Collider *collider = ecs_field(rows, EcsPolygon8Collider, i, 1);
         ecs_set_ptr(world, rows->entities[i], EcsPolygon8ColliderWorld, collider);
     }
@@ -86,7 +86,7 @@ void EcsAddCircleColliderWorld(EcsRows *rows) {
     EcsType TEcsCircleColliderWorld = ecs_column_type(rows, 2);
 
     int i;
-    for (i = rows->begin; i < rows->end; i ++) {
+    for (i = 0; i < rows->count; i ++) {
         EcsCircleCollider *collider = ecs_field(rows, EcsCircleCollider, i, 1);
         ecs_set_ptr(world, rows->entities[i], EcsCircleColliderWorld, collider);
     }
@@ -97,7 +97,7 @@ void EcsAddCircleColliderWorld(EcsRows *rows) {
 
 void EcsTransformPolygon8Colliders(EcsRows *rows) {
     int i;
-    for (i = rows->begin; i < rows->end; i ++) {
+    for (i = 0; i < rows->count; i ++) {
         EcsMatTransform2D *m = ecs_field(rows, EcsMatTransform2D, i, 1);
         EcsPolygon8Collider *c = ecs_field(rows, EcsPolygon8Collider, i, 2);
         EcsPolygon8ColliderWorld *cw = ecs_field(rows, EcsPolygon8ColliderWorld, i, 3);
@@ -108,7 +108,7 @@ void EcsTransformPolygon8Colliders(EcsRows *rows) {
 
 void EcsTransformCircleColliders(EcsRows *rows) {
     int i;
-    for (i = rows->begin; i < rows->end; i ++) {
+    for (i = 0; i < rows->count; i ++) {
         EcsMatTransform2D *m = ecs_field(rows, EcsMatTransform2D, i, 1);
         EcsCircleCollider *c = ecs_field(rows, EcsCircleCollider, i, 2);
         EcsCircleColliderWorld *cw = ecs_field(rows, EcsCircleColliderWorld, i, 3);
@@ -165,7 +165,7 @@ void EcsTestColliders(EcsRows *rows) {
     if (param->collider_component == TEcsPolygon8ColliderWorld) {
         EcsPolygonCollider c1 = poly8_to_poly(param->collider_data);
         if (collider == TEcsPolygon8ColliderWorld) {
-            for (i = rows->begin; i < rows->end; i ++) {
+            for (i = 0; i < rows->count; i ++) {
                 EcsPolygonCollider c2 = poly8_to_poly(
                     ecs_field(rows, EcsPolygon8ColliderWorld, i, 1));
 
@@ -175,7 +175,7 @@ void EcsTestColliders(EcsRows *rows) {
                 }
             }
         } else if (collider == TEcsCircleColliderWorld) {
-            for (i = rows->begin; i < rows->end; i ++) {
+            for (i = 0; i < rows->count; i ++) {
                 EcsCircleColliderWorld *c2 = ecs_field(rows, EcsCircleColliderWorld, i, 1);
 
                 if (ecs_collider2d_poly_circle(&c1, c2, &collision)) {
@@ -187,7 +187,7 @@ void EcsTestColliders(EcsRows *rows) {
     } else if (param->collider_component == TEcsCircleColliderWorld) {
         EcsCircleColliderWorld *c1 = param->collider_data;
         if (collider == TEcsPolygon8ColliderWorld) {
-            for (i = rows->begin; i < rows->end; i ++) {
+            for (i = 0; i < rows->count; i ++) {
                 EcsPolygonCollider c2 = poly8_to_poly(ecs_field(rows, EcsPolygon8ColliderWorld, i, 1));
 
                 if (ecs_collider2d_circle_poly(c1, &c2, &collision)) {
@@ -196,7 +196,7 @@ void EcsTestColliders(EcsRows *rows) {
                 }
             }
         } else if (collider == TEcsCircleColliderWorld) {
-            for (i = rows->begin; i < rows->end; i ++) {
+            for (i = 0; i < rows->count; i ++) {
                 EcsCircleColliderWorld *c2 = ecs_field(rows, EcsCircleColliderWorld, i, 1);
 
                 if (ecs_collider2d_circle(c1, c2, &collision)) {
@@ -214,7 +214,7 @@ void EcsWalkColliders(EcsRows *rows) {
     EcsEntity EcsTestColliders = ecs_column_component(rows, 2);
     int i;
     
-    for (i = rows->begin; i < rows->end; i ++) {
+    for (i = 0; i < rows->count; i ++) {
         void *data = _ecs_field(rows, i, 1, false);
         
         TestColliderParam param = {
@@ -227,7 +227,7 @@ void EcsWalkColliders(EcsRows *rows) {
             world,
             EcsTestColliders,
             rows->delta_time,
-            rows->index_offset + i + 1,
+            rows->frame_offset + i + 1,
             0,
             0,
             &param);
@@ -238,7 +238,7 @@ void EcsCleanCollisions(EcsRows *rows) {
     EcsWorld *world = rows->world;
 
     int i;
-    for (i = rows->begin; i < rows->end; i ++) {
+    for (i = 0; i < rows->count; i ++) {
         ecs_delete(world, rows->entities[i]);
     }
 }

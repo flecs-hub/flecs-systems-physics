@@ -3,7 +3,7 @@
 #include <math.h>
 
 void EcsAddRotate2D(ecs_rows_t *rows) {
-    EcsType TEcsRotation2D = ecs_column_type(rows, 2);
+    ecs_type_t TEcsRotation2D = ecs_column_type(rows, 2);
 
     int i;
     for (i = 0; i < rows->count; i ++) {

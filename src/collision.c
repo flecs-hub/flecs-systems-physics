@@ -7,8 +7,8 @@
 static
 void add_rect_collider(
     ecs_world_t *world,
-    EcsEntity entity,
-    EcsType TEcsPolygon8Collider,
+    ecs_entity_t entity,
+    ecs_type_t TEcsPolygon8Collider,
     float w,
     float h)
 {
@@ -26,7 +26,7 @@ void add_rect_collider(
 
 void EcsAddColliderForSquare(ecs_rows_t *rows) {
     ecs_world_t *world = rows->world;
-    EcsType TEcsPolygon8Collider = ecs_column_type(rows, 3);
+    ecs_type_t TEcsPolygon8Collider = ecs_column_type(rows, 3);
 
     int i;
     for (i = 0; i < rows->count; i ++) {
@@ -39,7 +39,7 @@ void EcsAddColliderForSquare(ecs_rows_t *rows) {
 
 void EcsAddColliderForRectangle(ecs_rows_t *rows) {
     ecs_world_t *world = rows->world;
-    EcsType TEcsPolygon8Collider = ecs_column_type(rows, 3);
+    ecs_type_t TEcsPolygon8Collider = ecs_column_type(rows, 3);
 
     int i;
     for (i = 0; i < rows->count; i ++) {
@@ -54,7 +54,7 @@ void EcsAddColliderForRectangle(ecs_rows_t *rows) {
 
 void EcsAddColliderForCircle(ecs_rows_t *rows) {
     ecs_world_t *world = rows->world;
-    EcsType TEcsCircleCollider = ecs_column_type(rows, 3);
+    ecs_type_t TEcsCircleCollider = ecs_column_type(rows, 3);
 
     int i;
     for (i = 0; i < rows->count; i ++) {
@@ -72,7 +72,7 @@ void EcsAddColliderForCircle(ecs_rows_t *rows) {
 
 void EcsAddPolygon8ColliderWorld(ecs_rows_t *rows) {
     ecs_world_t *world = rows->world;
-    EcsType TEcsPolygon8ColliderWorld = ecs_column_type(rows, 2);
+    ecs_type_t TEcsPolygon8ColliderWorld = ecs_column_type(rows, 2);
 
     int i;
     for (i = 0; i < rows->count; i ++) {
@@ -83,7 +83,7 @@ void EcsAddPolygon8ColliderWorld(ecs_rows_t *rows) {
 
 void EcsAddCircleColliderWorld(ecs_rows_t *rows) {
     ecs_world_t *world = rows->world;
-    EcsType TEcsCircleColliderWorld = ecs_column_type(rows, 2);
+    ecs_type_t TEcsCircleColliderWorld = ecs_column_type(rows, 2);
 
     int i;
     for (i = 0; i < rows->count; i ++) {
@@ -117,8 +117,8 @@ void EcsTransformCircleColliders(ecs_rows_t *rows) {
 }
 
 typedef struct TestColliderParam {
-    EcsEntity entity;
-    EcsEntity collider_component;
+    ecs_entity_t entity;
+    ecs_entity_t collider_component;
     void *collider_data;
 } TestColliderParam;
 
@@ -134,10 +134,10 @@ EcsPolygonCollider poly8_to_poly(
 
 void create_collision(
     ecs_world_t *world,
-    EcsEntity entity_1,
-    EcsEntity entity_2,
+    ecs_entity_t entity_1,
+    ecs_entity_t entity_2,
     EcsCollision2D *collision_data,
-    EcsType TEcsCollision2D)
+    ecs_type_t TEcsCollision2D)
 {
     ecs_assert(entity_1 != entity_2, ECS_INTERNAL_ERROR, NULL);
 
@@ -155,10 +155,10 @@ void create_collision(
 void EcsTestColliders(ecs_rows_t *rows) {
     TestColliderParam *param = rows->param;
     ecs_world_t *world = rows->world;
-    EcsType collider = ecs_column_type(rows, 1);
-    EcsType TEcsPolygon8ColliderWorld = ecs_column_type(rows, 2);
-    EcsType TEcsCircleColliderWorld = ecs_column_type(rows, 3);
-    EcsType TEcsCollision2D = ecs_column_type(rows, 4);
+    ecs_type_t collider = ecs_column_type(rows, 1);
+    ecs_type_t TEcsPolygon8ColliderWorld = ecs_column_type(rows, 2);
+    ecs_type_t TEcsCircleColliderWorld = ecs_column_type(rows, 3);
+    ecs_type_t TEcsCollision2D = ecs_column_type(rows, 4);
     EcsCollision2D collision;
     int i;
 
@@ -210,8 +210,8 @@ void EcsTestColliders(ecs_rows_t *rows) {
 
 void EcsWalkColliders(ecs_rows_t *rows) {
     ecs_world_t *world = rows->world;
-    EcsType collider = ecs_column_type(rows, 1);
-    EcsEntity EcsTestColliders = ecs_column_component(rows, 2);
+    ecs_type_t collider = ecs_column_type(rows, 1);
+    ecs_entity_t EcsTestColliders = ecs_column_component(rows, 2);
     int i;
     
     for (i = 0; i < rows->count; i ++) {

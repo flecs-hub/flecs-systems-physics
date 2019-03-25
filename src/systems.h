@@ -3,38 +3,38 @@
 
 #include <include/bake_config.h>
 
-void EcsAddColliderForSquare(EcsRows *rows);
+void EcsAddColliderForSquare(ecs_rows_t *rows);
 
-void EcsAddColliderForRectangle(EcsRows *rows);
+void EcsAddColliderForRectangle(ecs_rows_t *rows);
 
-void EcsAddColliderForCircle(EcsRows *rows);
+void EcsAddColliderForCircle(ecs_rows_t *rows);
 
-void EcsAddPolygon8ColliderWorld(EcsRows *rows);
+void EcsAddPolygon8ColliderWorld(ecs_rows_t *rows);
 
-void EcsAddCircleColliderWorld(EcsRows *rows);
+void EcsAddCircleColliderWorld(ecs_rows_t *rows);
 
-void EcsTransformPolygon8Colliders(EcsRows *rows);
+void EcsTransformPolygon8Colliders(ecs_rows_t *rows);
 
-void EcsTransformCircleColliders(EcsRows *rows);
+void EcsTransformCircleColliders(ecs_rows_t *rows);
 
-void EcsTestColliders(EcsRows *rows);
+void EcsTestColliders(ecs_rows_t *rows);
 
-void EcsWalkColliders(EcsRows *rows);
+void EcsWalkColliders(ecs_rows_t *rows);
 
-void EcsCleanCollisions(EcsRows *rows);
+void EcsCleanCollisions(ecs_rows_t *rows);
 
-void EcsAddRotate2D(EcsRows *rows);
+void EcsAddRotate2D(ecs_rows_t *rows);
 
-void EcsMove2D_w_Rotation(EcsRows *rows);
+void EcsMove2D_w_Rotation(ecs_rows_t *rows);
 
-void EcsMove2D_w_Velocity(EcsRows *rows);
+void EcsMove2D_w_Velocity(ecs_rows_t *rows);
 
-void EcsRotate2D(EcsRows *rows);
+void EcsRotate2D(ecs_rows_t *rows);
 
-void EcsMove3D_w_Rotation(EcsRows *rows);
+void EcsMove3D_w_Rotation(ecs_rows_t *rows);
 
-void EcsMove3D_w_Velocity(EcsRows *rows);
+void EcsMove3D_w_Velocity(ecs_rows_t *rows);
 
-void EcsRotate3D(EcsRows *rows);
+void EcsRotate3D(ecs_rows_t *rows);
 
 #endif

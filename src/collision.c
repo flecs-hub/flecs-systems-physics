@@ -6,7 +6,7 @@
 
 static
 void add_rect_collider(
-    EcsWorld *world,
+    ecs_world_t *world,
     EcsEntity entity,
     EcsType TEcsPolygon8Collider,
     float w,
@@ -24,8 +24,8 @@ void add_rect_collider(
     });
 }
 
-void EcsAddColliderForSquare(EcsRows *rows) {
-    EcsWorld *world = rows->world;
+void EcsAddColliderForSquare(ecs_rows_t *rows) {
+    ecs_world_t *world = rows->world;
     EcsType TEcsPolygon8Collider = ecs_column_type(rows, 3);
 
     int i;
@@ -37,8 +37,8 @@ void EcsAddColliderForSquare(EcsRows *rows) {
     }
 }
 
-void EcsAddColliderForRectangle(EcsRows *rows) {
-    EcsWorld *world = rows->world;
+void EcsAddColliderForRectangle(ecs_rows_t *rows) {
+    ecs_world_t *world = rows->world;
     EcsType TEcsPolygon8Collider = ecs_column_type(rows, 3);
 
     int i;
@@ -52,8 +52,8 @@ void EcsAddColliderForRectangle(EcsRows *rows) {
     }
 }
 
-void EcsAddColliderForCircle(EcsRows *rows) {
-    EcsWorld *world = rows->world;
+void EcsAddColliderForCircle(ecs_rows_t *rows) {
+    ecs_world_t *world = rows->world;
     EcsType TEcsCircleCollider = ecs_column_type(rows, 3);
 
     int i;
@@ -70,8 +70,8 @@ void EcsAddColliderForCircle(EcsRows *rows) {
 
 /* -- Add world colliders (colliders transformed to world space) -- */
 
-void EcsAddPolygon8ColliderWorld(EcsRows *rows) {
-    EcsWorld *world = rows->world;
+void EcsAddPolygon8ColliderWorld(ecs_rows_t *rows) {
+    ecs_world_t *world = rows->world;
     EcsType TEcsPolygon8ColliderWorld = ecs_column_type(rows, 2);
 
     int i;
@@ -81,8 +81,8 @@ void EcsAddPolygon8ColliderWorld(EcsRows *rows) {
     }
 }
 
-void EcsAddCircleColliderWorld(EcsRows *rows) {
-    EcsWorld *world = rows->world;
+void EcsAddCircleColliderWorld(ecs_rows_t *rows) {
+    ecs_world_t *world = rows->world;
     EcsType TEcsCircleColliderWorld = ecs_column_type(rows, 2);
 
     int i;
@@ -95,7 +95,7 @@ void EcsAddCircleColliderWorld(EcsRows *rows) {
 
 /* -- Transform colliders to world space -- */
 
-void EcsTransformPolygon8Colliders(EcsRows *rows) {
+void EcsTransformPolygon8Colliders(ecs_rows_t *rows) {
     int i;
     for (i = 0; i < rows->count; i ++) {
         EcsMatTransform2D *m = ecs_field(rows, EcsMatTransform2D, i, 1);
@@ -106,7 +106,7 @@ void EcsTransformPolygon8Colliders(EcsRows *rows) {
     }
 }
 
-void EcsTransformCircleColliders(EcsRows *rows) {
+void EcsTransformCircleColliders(ecs_rows_t *rows) {
     int i;
     for (i = 0; i < rows->count; i ++) {
         EcsMatTransform2D *m = ecs_field(rows, EcsMatTransform2D, i, 1);
@@ -133,7 +133,7 @@ EcsPolygonCollider poly8_to_poly(
 }
 
 void create_collision(
-    EcsWorld *world,
+    ecs_world_t *world,
     EcsEntity entity_1,
     EcsEntity entity_2,
     EcsCollision2D *collision_data,
@@ -152,9 +152,9 @@ void create_collision(
     ecs_set_ptr(world, 0, EcsCollision2D, collision_data);
 }
 
-void EcsTestColliders(EcsRows *rows) {
+void EcsTestColliders(ecs_rows_t *rows) {
     TestColliderParam *param = rows->param;
-    EcsWorld *world = rows->world;
+    ecs_world_t *world = rows->world;
     EcsType collider = ecs_column_type(rows, 1);
     EcsType TEcsPolygon8ColliderWorld = ecs_column_type(rows, 2);
     EcsType TEcsCircleColliderWorld = ecs_column_type(rows, 3);
@@ -208,8 +208,8 @@ void EcsTestColliders(EcsRows *rows) {
     }
 }
 
-void EcsWalkColliders(EcsRows *rows) {
-    EcsWorld *world = rows->world;
+void EcsWalkColliders(ecs_rows_t *rows) {
+    ecs_world_t *world = rows->world;
     EcsType collider = ecs_column_type(rows, 1);
     EcsEntity EcsTestColliders = ecs_column_component(rows, 2);
     int i;
@@ -234,8 +234,8 @@ void EcsWalkColliders(EcsRows *rows) {
     }
 }
 
-void EcsCleanCollisions(EcsRows *rows) {
-    EcsWorld *world = rows->world;
+void EcsCleanCollisions(ecs_rows_t *rows) {
+    ecs_world_t *world = rows->world;
 
     int i;
     for (i = 0; i < rows->count; i ++) {

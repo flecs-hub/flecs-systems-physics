@@ -2,7 +2,7 @@
 #include <string.h>
 #include <math.h>
 
-void EcsAddRotate2D(EcsRows *rows) {
+void EcsAddRotate2D(ecs_rows_t *rows) {
     EcsType TEcsRotation2D = ecs_column_type(rows, 2);
 
     int i;
@@ -11,7 +11,7 @@ void EcsAddRotate2D(EcsRows *rows) {
     }
 }
 
-void EcsMove2D_w_Rotation(EcsRows *rows) {
+void EcsMove2D_w_Rotation(ecs_rows_t *rows) {
     int i;
     for (i = 0; i < rows->count; i ++) {
         EcsPosition2D *p = ecs_field(rows, EcsPosition2D, i, 1);
@@ -28,7 +28,7 @@ void EcsMove2D_w_Rotation(EcsRows *rows) {
     }
 }
 
-void EcsMove2D_w_Velocity(EcsRows *rows) {
+void EcsMove2D_w_Velocity(ecs_rows_t *rows) {
     int i;
     for (i = 0; i < rows->count; i ++) {
         EcsPosition2D *p = ecs_field(rows, EcsPosition2D, i, 1);
@@ -47,7 +47,7 @@ void EcsMove2D_w_Velocity(EcsRows *rows) {
     }
 }
 
-void EcsRotate2D(EcsRows *rows) {
+void EcsRotate2D(ecs_rows_t *rows) {
     int i;
     for (i = 0; i < rows->count; i ++) {
         EcsRotation2D *r = ecs_field(rows, EcsRotation2D, i, 1);
@@ -56,7 +56,7 @@ void EcsRotate2D(EcsRows *rows) {
     }
 }
 
-void EcsMove3D_w_Rotation(EcsRows *rows) {
+void EcsMove3D_w_Rotation(ecs_rows_t *rows) {
     int i;
     for (i = 0; i < rows->count; i ++) {
         EcsPosition3D *p = ecs_field(rows, EcsPosition3D, i, 1);
@@ -71,7 +71,7 @@ void EcsMove3D_w_Rotation(EcsRows *rows) {
     }
 }
 
-void EcsMove3D_w_Velocity(EcsRows *rows) {
+void EcsMove3D_w_Velocity(ecs_rows_t *rows) {
     int i;
     for (i = 0; i < rows->count; i ++) {
         EcsPosition3D *p = ecs_field(rows, EcsPosition3D, i, 1);
@@ -92,7 +92,7 @@ void EcsMove3D_w_Velocity(EcsRows *rows) {
     }
 }
 
-void EcsRotate3D(EcsRows *rows) {
+void EcsRotate3D(ecs_rows_t *rows) {
     int i;
     for (i = 0; i < rows->count; i ++) {
         EcsRotation3D *r = ecs_field(rows, EcsRotation3D, i, 1);

@@ -66,10 +66,10 @@ void EcsSystemsPhysics(
         ECS_TYPE(world, EcsCollide,
             EcsTransformPolygon8Colliders, EcsTransformCircleColliders, EcsTestColliders, EcsWalkColliders, EcsCleanCollisions);
 
-        ECS_SET_SYSTEM(handles, EcsMove2D_w_Rotation);
-        ECS_SET_SYSTEM(handles, EcsMove2D_w_Velocity);
-        ECS_SET_COMPONENT(handles, EcsMove2D);
-        ECS_SET_SYSTEM(handles, EcsRotate2D);
+        ECS_SET_ENTITY(handles, EcsMove2D_w_Rotation);
+        ECS_SET_ENTITY(handles, EcsMove2D_w_Velocity);
+        ECS_SET_ENTITY(handles, EcsMove2D);
+        ECS_SET_ENTITY(handles, EcsRotate2D);
     }
 
     if (do_3d) {
@@ -84,20 +84,20 @@ void EcsSystemsPhysics(
 
         ECS_TYPE(world, EcsMove3D, EcsMove3D_w_Rotation, EcsMove3D_w_Velocity, EcsRotate3D);
 
-        ECS_SET_SYSTEM(handles, EcsMove3D_w_Rotation);
-        ECS_SET_SYSTEM(handles, EcsMove3D_w_Velocity);
-        ECS_SET_COMPONENT(handles, EcsMove3D);
-        ECS_SET_SYSTEM(handles, EcsRotate3D);
+        ECS_SET_ENTITY(handles, EcsMove3D_w_Rotation);
+        ECS_SET_ENTITY(handles, EcsMove3D_w_Velocity);
+        ECS_SET_ENTITY(handles, EcsMove3D);
+        ECS_SET_ENTITY(handles, EcsRotate3D);
     }
 
     if (do_2d && do_3d) {
         ECS_TYPE(world, EcsMove, EcsMove2D, EcsMove3D);
-        ECS_SET_COMPONENT(handles, EcsMove);
+        ECS_SET_ENTITY(handles, EcsMove);
     } else if (!do_2d) {
         ECS_TYPE(world, EcsMove, EcsMove3D);
-        ECS_SET_COMPONENT(handles, EcsMove);
+        ECS_SET_ENTITY(handles, EcsMove);
     } else if (!do_3d) {
         ECS_TYPE(world, EcsMove, EcsMove2D);
-        ECS_SET_COMPONENT(handles, EcsMove);
+        ECS_SET_ENTITY(handles, EcsMove);
     }
 }

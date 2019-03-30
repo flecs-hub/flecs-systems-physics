@@ -20,13 +20,13 @@ void EcsSystemsPhysics(
     ECS_IMPORT(world, EcsSystemsTransform, flags);
 
     if (do_2d) {
-        ECS_SYSTEM(world, EcsMove2D_w_Rotation, EcsOnFrame,
+        ECS_SYSTEM(world, EcsMove2D_w_Rotation, EcsOnUpdate,
             EcsPosition2D, EcsRotation2D, EcsSpeed, !EcsVelocity2D, SYSTEM.EcsHidden);
 
-        ECS_SYSTEM(world, EcsMove2D_w_Velocity, EcsOnFrame,
+        ECS_SYSTEM(world, EcsMove2D_w_Velocity, EcsOnUpdate,
             EcsPosition2D, ?EcsSpeed, EcsVelocity2D, SYSTEM.EcsHidden);
 
-        ECS_SYSTEM(world, EcsRotate2D, EcsOnFrame,
+        ECS_SYSTEM(world, EcsRotate2D, EcsOnUpdate,
             EcsRotation2D, EcsAngularSpeed, SYSTEM.EcsHidden);
 
         ECS_SYSTEM(world, EcsAddRotate2D, EcsOnLoad, EcsAngularSpeed, !EcsRotation2D, SYSTEM.EcsHidden);
@@ -34,11 +34,6 @@ void EcsSystemsPhysics(
         ECS_TYPE(world, EcsMove2D, EcsMove2D_w_Rotation, EcsMove2D_w_Velocity, EcsRotate2D);
 
         /* Auto-add colliders to geometry entities that have EcsCollider */
-
-        /* TODO: when EcsCollider is defined on a prefab, colliders should be
-         *       added to prefab as well instead of the derived entity */
-
-        ECS_SYSTEM(world, EcsAddColliderForSquare,    EcsOnLoad, EcsSquare, EcsCollider, !EcsPolygon8Collider, SYSTEM.EcsHidden);
         ECS_SYSTEM(world, EcsAddColliderForRectangle, EcsOnLoad, EcsRectangle, EcsCollider, !EcsPolygon8Collider, SYSTEM.EcsHidden);
         ECS_SYSTEM(world, EcsAddColliderForCircle,    EcsOnLoad, EcsCircle, EcsCollider, !EcsCircleCollider, SYSTEM.EcsHidden);
 
@@ -46,12 +41,9 @@ void EcsSystemsPhysics(
         ECS_SYSTEM(world, EcsAddPolygon8ColliderWorld,  EcsOnLoad, EcsPolygon8Collider, !EcsPolygon8ColliderWorld, SYSTEM.EcsHidden);
         ECS_SYSTEM(world, EcsAddCircleColliderWorld,    EcsOnLoad, EcsCircleCollider, !EcsCircleColliderWorld, SYSTEM.EcsHidden);
 
-        /* TODO: world space colliders should only be added to entities, never
-         *       to prefabs */
-
         /* Transform colliders to world space */
-        ECS_SYSTEM(world, EcsTransformPolygon8Colliders,  EcsPostFrame, EcsMatTransform2D, EcsPolygon8Collider, EcsPolygon8ColliderWorld, SYSTEM.EcsHidden);
-        ECS_SYSTEM(world, EcsTransformCircleColliders,    EcsPostFrame, EcsMatTransform2D, EcsCircleCollider, EcsCircleColliderWorld, SYSTEM.EcsHidden);
+        ECS_SYSTEM(world, EcsTransformPolygon8Colliders,  EcsOnValidate, EcsMatTransform2D, EcsPolygon8Collider, EcsPolygon8ColliderWorld, SYSTEM.EcsHidden);
+        ECS_SYSTEM(world, EcsTransformCircleColliders,    EcsOnValidate, EcsMatTransform2D, EcsCircleCollider, EcsCircleColliderWorld, SYSTEM.EcsHidden);
 
         /* Do collision testing */
         ECS_SYSTEM(world, EcsTestColliders, EcsManual,
@@ -60,9 +52,12 @@ void EcsSystemsPhysics(
             ID.EcsCircleColliderWorld,
             ID.EcsCollision2D, SYSTEM.EcsHidden);
 
-        ECS_SYSTEM(world, EcsCleanCollisions, EcsPreFrame, EcsCollision2D, SYSTEM.EcsHidden);
-        ECS_SYSTEM(world, EcsWalkColliders, EcsPostFrame, EcsPolygon8ColliderWorld | EcsCircleColliderWorld, ID.EcsTestColliders, SYSTEM.EcsHidden);
+        ECS_SYSTEM(world, EcsWalkColliders, EcsOnValidate, EcsPolygon8ColliderWorld | EcsCircleColliderWorld, ID.EcsTestColliders, SYSTEM.EcsHidden);
+        
+        /* Clean collisions for next frame */
+        ECS_SYSTEM(world, EcsCleanCollisions, EcsPreUpdate, EcsCollision2D, SYSTEM.EcsHidden);
 
+        /* Collide feature */
         ECS_TYPE(world, EcsCollide,
             EcsTransformPolygon8Colliders, EcsTransformCircleColliders, EcsTestColliders, EcsWalkColliders, EcsCleanCollisions);
 
@@ -73,13 +68,13 @@ void EcsSystemsPhysics(
     }
 
     if (do_3d) {
-        ECS_SYSTEM(world, EcsMove3D_w_Rotation, EcsOnFrame,
+        ECS_SYSTEM(world, EcsMove3D_w_Rotation, EcsOnUpdate,
             EcsPosition3D, ?EcsRotation3D, EcsSpeed, !EcsVelocity3D, SYSTEM.EcsHidden);
 
-        ECS_SYSTEM(world, EcsMove3D_w_Velocity, EcsOnFrame,
+        ECS_SYSTEM(world, EcsMove3D_w_Velocity, EcsOnUpdate,
             EcsPosition3D, ?EcsSpeed, EcsVelocity3D, SYSTEM.EcsHidden);
 
-        ECS_SYSTEM(world, EcsRotate3D, EcsOnFrame,
+        ECS_SYSTEM(world, EcsRotate3D, EcsOnUpdate,
             EcsRotation3D, ?EcsAngularSpeed, EcsAngularVelocity, SYSTEM.EcsHidden);
 
         ECS_TYPE(world, EcsMove3D, EcsMove3D_w_Rotation, EcsMove3D_w_Velocity, EcsRotate3D);

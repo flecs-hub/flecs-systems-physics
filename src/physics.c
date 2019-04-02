@@ -34,6 +34,7 @@ void EcsSystemsPhysics(
         ECS_TYPE(world, EcsMove2D, EcsMove2D_w_Rotation, EcsMove2D_w_Velocity, EcsRotate2D);
 
         /* Auto-add colliders to geometry entities that have EcsCollider */
+        ECS_SYSTEM(world, EcsAddColliderForSquare,    EcsOnLoad, EcsSquare, EcsCollider, !EcsPolygon8Collider, SYSTEM.EcsHidden);
         ECS_SYSTEM(world, EcsAddColliderForRectangle, EcsOnLoad, EcsRectangle, EcsCollider, !EcsPolygon8Collider, SYSTEM.EcsHidden);
         ECS_SYSTEM(world, EcsAddColliderForCircle,    EcsOnLoad, EcsCircle, EcsCollider, !EcsCircleCollider, SYSTEM.EcsHidden);
 

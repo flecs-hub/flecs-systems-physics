@@ -42,8 +42,8 @@ void EcsMove2D_w_Velocity(ecs_rows_t *rows) {
             y_speed *= speed->value;
         }
 
-        p->x += x_speed * rows->delta_time;;
-        p->y += y_speed * rows->delta_time;;
+        p->x += x_speed * rows->delta_time;
+        p->y += y_speed * rows->delta_time;
     }
 }
 

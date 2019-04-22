@@ -8,7 +8,7 @@
 extern "C" {
 #endif
 
-typedef struct EcsSystemsPhysicsHandles {
+typedef struct FlecsSystemsPhysics {
    ECS_DECLARE_ENTITY(EcsMove2D_w_Rotation);
    ECS_DECLARE_ENTITY(EcsMove2D_w_Velocity);
    ECS_DECLARE_ENTITY(EcsMove2D);
@@ -19,14 +19,13 @@ typedef struct EcsSystemsPhysicsHandles {
    ECS_DECLARE_ENTITY(EcsRotate3D);
    ECS_DECLARE_ENTITY(EcsMove);
    ECS_DECLARE_ENTITY(EcsCollide);
-} EcsSystemsPhysicsHandles;
+} FlecsSystemsPhysics;
 
-void EcsSystemsPhysics(
+void FlecsSystemsPhysicsImport(
     ecs_world_t *world,
-    int flags,
-    void *handles_out);
+    int flags);
 
-#define EcsSystemsPhysics_ImportHandles(handles)\
+#define FlecsSystemsPhysicsImportHandles(handles)\
     ECS_IMPORT_ENTITY(handles, EcsMove2D_w_Rotation);\
     ECS_IMPORT_ENTITY(handles, EcsMove2D_w_Velocity);\
     ECS_IMPORT_ENTITY(handles, EcsMove2D);\

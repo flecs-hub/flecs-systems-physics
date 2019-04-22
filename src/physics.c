@@ -4,20 +4,18 @@
 
 #include "systems.h"
 
-void EcsSystemsPhysics(
+void FlecsSystemsPhysicsImport(
     ecs_world_t *world,
-    int flags,
-    void *handles_out)
+    int flags)
 {
-    EcsSystemsPhysicsHandles *handles = handles_out;
     bool do_2d = !flags || flags & ECS_2D;
     bool do_3d = !flags || flags & ECS_3D;
-
-    memset(handles, 0, sizeof(EcsSystemsPhysicsHandles));
     
-    ECS_IMPORT(world, EcsComponentsPhysics, flags);
-    ECS_IMPORT(world, EcsComponentsGeometry, flags);
-    ECS_IMPORT(world, EcsSystemsTransform, flags);
+    ECS_IMPORT(world, FlecsComponentsPhysics, flags);
+    ECS_IMPORT(world, FlecsComponentsGeometry, flags);
+    ECS_IMPORT(world, FlecsSystemsTransform, flags);
+
+    ECS_MODULE(world, FlecsSystemsPhysics);
 
     if (do_2d) {
         ECS_SYSTEM(world, EcsMove2D_w_Rotation, EcsOnUpdate,

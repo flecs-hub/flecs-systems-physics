@@ -31,6 +31,10 @@ void EcsMove2D_w_Velocity(ecs_rows_t *rows);
 
 void EcsRotate2D(ecs_rows_t *rows);
 
+void EcsGravity2D(ecs_rows_t *rows);
+
+void EcsCollide2D(ecs_rows_t *rows);
+
 void EcsMove3D_w_Rotation(ecs_rows_t *rows);
 
 void EcsMove3D_w_Velocity(ecs_rows_t *rows);

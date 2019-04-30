@@ -29,6 +29,10 @@ void FlecsSystemsPhysicsImport(
 
         ECS_SYSTEM(world, EcsAddRotate2D, EcsOnLoad, EcsAngularSpeed, !EcsRotation2D, SYSTEM.EcsHidden);
 
+        ECS_SYSTEM(world, EcsGravity2D, EcsOnUpdate, EcsVelocity2D, EcsRigidBody);
+
+        ECS_SYSTEM(world, EcsCollide2D, EcsPostUpdate, EcsCollision2D, ID.EcsPosition2D, ID.EcsVelocity2D, ID.EcsBounciness, EcsRigidBody);
+
         ECS_TYPE(world, EcsMove2D, EcsMove2D_w_Rotation, EcsMove2D_w_Velocity, EcsRotate2D);
 
         /* Auto-add colliders to geometry entities that have EcsCollider */

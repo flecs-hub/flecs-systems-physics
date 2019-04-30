@@ -141,14 +141,9 @@ void create_collision(
 {
     ecs_assert(entity_1 != entity_2, ECS_INTERNAL_ERROR, NULL);
 
-    if (entity_2 > entity_1) {
-        collision_data->entity_1 = entity_1;
-        collision_data->entity_2 = entity_2;
-    } else {
-        collision_data->entity_1 = entity_2;
-        collision_data->entity_2 = entity_1;
-    }
-
+    collision_data->entity_1 = entity_1;
+    collision_data->entity_2 = entity_2;
+    
     ecs_set_ptr(world, 0, EcsCollision2D, collision_data);
 }
 

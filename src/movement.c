@@ -72,9 +72,12 @@ void EcsGravity2D(ecs_rows_t *rows) {
 }
 
 void EcsCollide2D(ecs_rows_t *rows) {
+    ecs_world_t *world = rows->world;
+
     ECS_COLUMN_COMPONENT(rows, EcsPosition2D, 2);
     ECS_COLUMN_COMPONENT(rows, EcsVelocity2D, 3);
     ECS_COLUMN_COMPONENT(rows, EcsBounciness, 4);
+    ECS_COLUMN_COMPONENT(rows, EcsRigidBody, 4);
 
     int i;
     for (i = 0; i < rows->count; i ++) {
@@ -83,32 +86,35 @@ void EcsCollide2D(ecs_rows_t *rows) {
         ecs_entity_t e1 = collision->entity_1;
         ecs_entity_t e2 = collision->entity_2;
 
+        bool is_rigid_1 = ecs_has(world, e1, EcsRigidBody);
+        bool is_rigid_2 = ecs_has(world, e2, EcsRigidBody);
+
         EcsVec2 normal = collision->normal;
         float distance = collision->distance;
 
-        EcsVelocity2D *v1 = ecs_get_ptr(rows->world, e1, EcsVelocity2D);
-        EcsVelocity2D *v2 = ecs_get_ptr(rows->world, e2, EcsVelocity2D);
+        EcsVelocity2D *v1 = ecs_get_ptr(world, e1, EcsVelocity2D);
+        EcsVelocity2D *v2 = ecs_get_ptr(world, e2, EcsVelocity2D);
 
         EcsBounciness b1 = 1.0, b2 = 1.0;
-        EcsBounciness *b1_ptr = ecs_get_ptr(rows->world, e1, EcsBounciness);
+        EcsBounciness *b1_ptr = ecs_get_ptr(world, e1, EcsBounciness);
         if (b1_ptr) {
             b1 = *b1_ptr;
         }
         
-        EcsBounciness *b2_ptr = ecs_get_ptr(rows->world, e2, EcsBounciness);
+        EcsBounciness *b2_ptr = ecs_get_ptr(world, e2, EcsBounciness);
         if (b2_ptr) {
             b2 = *b2_ptr;
         }
         
         float b = (b1 + b2) / 2.0;
 
-        if (v1) {
+        if (v1 && is_rigid_1) {
             float move = distance;
             if (v2) {
                 move *= 0.5;
             }
 
-            EcsPosition2D *p = ecs_get_ptr(rows->world, e1, EcsPosition2D);        
+            EcsPosition2D *p = ecs_get_ptr(world, e1, EcsPosition2D);        
             p->x += move * normal.x;
             p->y += move * normal.y;
             
@@ -118,13 +124,13 @@ void EcsCollide2D(ecs_rows_t *rows) {
             ecs_vec2_mult(v1, b, v1);
         }
 
-        if (v2) {
+        if (v2 && is_rigid_2) {
             float move = distance;
             if (v1) {
                 move *= 0.5;
             }
 
-            EcsPosition2D *p = ecs_get_ptr(rows->world, e2, EcsPosition2D);    
+            EcsPosition2D *p = ecs_get_ptr(world, e2, EcsPosition2D);    
             p->x -= move * normal.x;
             p->y -= move * normal.y;
 

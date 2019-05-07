@@ -74,7 +74,7 @@ int8_t check_circle_circle(
 
     ecs_vec2_normalize(&(collision_out->normal), &(collision_out->normal));
 
-    collision_out->distance = fabs(sqrtf(distSqrt)-totalRadius);
+    collision_out->distance = totalRadius - sqrtf(distSqrt);
 
     return true;
 }

@@ -77,8 +77,8 @@ void EcsCollide2D(ecs_rows_t *rows) {
     ECS_COLUMN_COMPONENT(rows, EcsPosition2D, 2);
     ECS_COLUMN_COMPONENT(rows, EcsVelocity2D, 3);
     ECS_COLUMN_COMPONENT(rows, EcsBounciness, 4);
-    ECS_COLUMN_COMPONENT(rows, EcsRigidBody, 4);
-
+    ECS_COLUMN_COMPONENT(rows, EcsFriction, 5);
+    ECS_COLUMN_COMPONENT(rows, EcsRigidBody, 6);
     int i;
     for (i = 0; i < rows->count; i ++) {
         EcsCollision2D *collision = ecs_field(rows, EcsCollision2D, i, 1);
@@ -90,12 +90,12 @@ void EcsCollide2D(ecs_rows_t *rows) {
         bool is_rigid_2 = ecs_has(world, e2, EcsRigidBody);
 
         EcsVec2 normal = collision->normal;
-        float distance = collision->distance;
+        float distance = collision->distance + 0.001f;
 
         EcsVelocity2D *v1 = ecs_get_ptr(world, e1, EcsVelocity2D);
         EcsVelocity2D *v2 = ecs_get_ptr(world, e2, EcsVelocity2D);
 
-        EcsBounciness b1 = 1.0, b2 = 1.0;
+        EcsBounciness b1 = 0, b2 = 0;
         EcsBounciness *b1_ptr = ecs_get_ptr(world, e1, EcsBounciness);
         if (b1_ptr) {
             b1 = *b1_ptr;
@@ -106,38 +106,77 @@ void EcsCollide2D(ecs_rows_t *rows) {
             b2 = *b2_ptr;
         }
         
-        float b = (b1 + b2) / 2.0;
+        float b = (b1 + b2);
 
-        if (v1 && is_rigid_1) {
-            float move = distance;
-            if (v2) {
-                move *= 0.5;
+        bool is_dynamic1 = (v1 && is_rigid_1);
+        bool is_dynamic2 = (v2 && is_rigid_2);
+
+        if (is_dynamic1 || is_dynamic2) {
+            if (!is_dynamic2) {
+                EcsPosition2D *p = ecs_get_ptr(world, e1, EcsPosition2D);        
+                p->x += (distance) * normal.x;
+                p->y += (distance) * normal.y;
+                
+                EcsVec2 v1x;
+                EcsVec2 v1y;
+
+                ecs_vec2_mult(&normal, ecs_vec2_dot(&normal, v1), &v1x);
+                ecs_vec2_sub(v1, &v1x, &v1y);
+
+                ecs_vec2_mult(&v1x, -1*b, v1);
+                ecs_vec2_add(v1, &v1y, v1);
+            } else if (!is_dynamic1) {
+                EcsPosition2D *p = ecs_get_ptr(world, e2, EcsPosition2D);    
+                p->x -= (distance) * normal.x;
+                p->y -= (distance) * normal.y;
+
+                EcsVec2 norm = normal;
+                ecs_vec2_mult(&norm, -1, &norm);
+                EcsVec2 v1x;
+                EcsVec2 v1y;
+                ecs_vec2_mult(&norm, ecs_vec2_dot(&norm, v2), &v1x);
+                ecs_vec2_sub(v2, &v1x, &v1y);
+                
+                ecs_vec2_mult(&v1x, -1*b, v2);
+                ecs_vec2_add(v2, &v1y, v2);
+                
+            } else {
+                EcsPosition2D *p1 = ecs_get_ptr(world, e1, EcsPosition2D);   
+                EcsPosition2D *p2 = ecs_get_ptr(world, e2, EcsPosition2D);   
+
+                EcsVec2 temp = normal;
+                ecs_vec2_mult(&temp, distance/2, &temp);
+                ecs_vec2_add(p1, &temp, p1);
+                ecs_vec2_sub(p2, &temp, p2);
+
+                EcsVec2 v1x;
+                EcsVec2 v1y;
+                EcsVec2 v2x;
+                EcsVec2 v2y;
+
+                ecs_vec2_mult(&normal, ecs_vec2_dot(&normal, v1), &v1x);
+                ecs_vec2_sub(v1, &v1x, &v1y);
+
+                ecs_vec2_mult(&normal, -1, &normal);
+                ecs_vec2_mult(&normal, ecs_vec2_dot(&normal, v2), &v2x);
+                ecs_vec2_sub(v2, &v2x, &v2y);
+
+                float m1 = 1;
+                float m2 = 1;
+                float cm = m1 + m2;
+
+                ecs_vec2_mult(&v1x, ((m1-m2)/cm) * (b/2), &temp);
+                ecs_vec2_mult(&v2x, (( 2*m2)/cm) * (b/2), v1);
+
+                ecs_vec2_add(v1, &temp, v1);
+                ecs_vec2_add(v1, &v1y, v1);
+                //
+                ecs_vec2_mult(&v1x, (( 2*m1)/cm) * (b/2), &temp);
+                ecs_vec2_mult(&v2x, ((m2-m1)/cm) * (b/2), v2);
+
+                ecs_vec2_add(v2, &temp, v2);
+                ecs_vec2_add(v2, &v2y, v2);
             }
-
-            EcsPosition2D *p = ecs_get_ptr(world, e1, EcsPosition2D);        
-            p->x += move * normal.x;
-            p->y += move * normal.y;
-            
-            EcsVec2 norm = normal;
-            ecs_vec2_mult(&norm, 1, &norm);
-            ecs_vec2_reflect(v1, &norm, v1);
-            ecs_vec2_mult(v1, b, v1);
-        }
-
-        if (v2 && is_rigid_2) {
-            float move = distance;
-            if (v1) {
-                move *= 0.5;
-            }
-
-            EcsPosition2D *p = ecs_get_ptr(world, e2, EcsPosition2D);    
-            p->x -= move * normal.x;
-            p->y -= move * normal.y;
-
-            EcsVec2 norm = normal;
-            ecs_vec2_mult(&norm, 1, &norm);
-            ecs_vec2_reflect(v2, &norm, v2);
-            ecs_vec2_mult(v2, b, v2);
         }
     }
 }

@@ -19,13 +19,13 @@ void EcsMove2D_w_Rotation(ecs_rows_t *rows) {
 
     int i;
     for (i = 0; i < rows->count; i ++) {
-        EcsSpeed *speed = ecs_field(rows, EcsSpeed, i, 2);
-        EcsRotation2D *r = ecs_field(rows, EcsRotation2D, i, 3);
-        float x_speed = 1;
+        EcsRotation2D *r = ecs_field(rows, EcsRotation2D, i, 2);
+        EcsSpeed *speed = ecs_field(rows, EcsSpeed, i, 3);
+        float x_speed = 0;
         float y_speed = 0;
 
-        x_speed = cos(r->angle) * speed->value;
-        y_speed = sin(r->angle) * speed->value;
+        x_speed = cos(r->angle - M_PI / 2.0) * speed->value;
+        y_speed = sin(r->angle - M_PI / 2.0) * speed->value;
 
         p[i].x += x_speed * rows->delta_time;
         p[i].y += y_speed * rows->delta_time;

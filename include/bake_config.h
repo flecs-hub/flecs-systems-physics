@@ -37,7 +37,7 @@
 
 /* Convenience macro for exporting symbols */
 #ifndef FLECS_SYSTEMS_PHYSICS_STATIC
-  #if FLECS_SYSTEMS_PHYSICS_IMPL && defined _MSC_VER
+  #if FLECS_SYSTEMS_PHYSICS_IMPL && (defined(_MSC_VER) || defined(__MINGW32__))
     #define FLECS_SYSTEMS_PHYSICS_EXPORT __declspec(dllexport)
   #elif FLECS_SYSTEMS_PHYSICS_IMPL
     #define FLECS_SYSTEMS_PHYSICS_EXPORT __attribute__((__visibility__("default")))

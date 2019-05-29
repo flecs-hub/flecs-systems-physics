@@ -1,4 +1,4 @@
-#include <include/physics.h>
+#include <flecs_systems_physics.h>
 #include <math.h>
 
 #define AXIS_MIN(minMax) ((minMax).x)

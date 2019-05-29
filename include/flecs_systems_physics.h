@@ -1,8 +1,8 @@
 #ifndef FLECS_SYSTEMS_PHYSICS_H
 #define FLECS_SYSTEMS_PHYSICS_H
 
-#include "bake_config.h"
-#include "physics_2d.h"
+#include <flecs-systems-physics/bake_config.h>
+#include <flecs-systems-physics/physics_2d.h>
 
 #ifdef __cplusplus
 extern "C" {

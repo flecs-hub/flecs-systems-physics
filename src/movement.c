@@ -19,8 +19,8 @@ void EcsMove2D_w_Rotation(ecs_rows_t *rows) {
 
     int i;
     for (i = 0; i < rows->count; i ++) {
-        EcsRotation2D *r = ecs_field(rows, EcsRotation2D, i, 2);
-        EcsSpeed *speed = ecs_field(rows, EcsSpeed, i, 3);
+        EcsRotation2D *r = ecs_field(rows, EcsRotation2D, 2, i);
+        EcsSpeed *speed = ecs_field(rows, EcsSpeed, 3, i);
         float x_speed = 0;
         float y_speed = 0;
 
@@ -37,8 +37,8 @@ void EcsMove2D_w_Velocity(ecs_rows_t *rows) {
 
     int i;
     for (i = 0; i < rows->count; i ++) {
-        EcsSpeed *speed = ecs_field(rows, EcsSpeed, i, 2);
-        EcsVelocity2D *v = ecs_field(rows, EcsVelocity2D, i, 3);
+        EcsSpeed *speed = ecs_field(rows, EcsSpeed, 2, i);
+        EcsVelocity2D *v = ecs_field(rows, EcsVelocity2D, 3, i);
         float x_speed = v->x;
         float y_speed = v->y;
 
@@ -57,7 +57,7 @@ void EcsRotate2D(ecs_rows_t *rows) {
 
     int i;
     for (i = 0; i < rows->count; i ++) {
-        EcsAngularSpeed *s = ecs_field(rows, EcsAngularSpeed, i, 2);
+        EcsAngularSpeed *s = ecs_field(rows, EcsAngularSpeed, 2, i);
         r[i].angle += s->value * rows->delta_time;;
     }
 }
@@ -81,7 +81,7 @@ void EcsCollide2D(ecs_rows_t *rows) {
     ECS_COLUMN_COMPONENT(rows, EcsRigidBody, 6);
     int i;
     for (i = 0; i < rows->count; i ++) {
-        EcsCollision2D *collision = ecs_field(rows, EcsCollision2D, i, 1);
+        EcsCollision2D *collision = ecs_field(rows, EcsCollision2D, 1, i);
 
         ecs_entity_t e1 = collision->entity_1;
         ecs_entity_t e2 = collision->entity_2;
@@ -186,8 +186,8 @@ void EcsMove3D_w_Rotation(ecs_rows_t *rows) {
 
     int i;
     for (i = 0; i < rows->count; i ++) {
-        EcsSpeed *speed = ecs_field(rows, EcsSpeed, i, 2);
-        EcsRotation3D *r = ecs_field(rows, EcsRotation3D, i, 3);
+        EcsSpeed *speed = ecs_field(rows, EcsSpeed, 2, i);
+        EcsRotation3D *r = ecs_field(rows, EcsRotation3D, 3, i);
         float x_speed = cos(r->z) * sin(r->y) * speed->value;
         float y_speed = cos(r->x) * sin(r->z) * speed->value;
         float z_speed = cos(r->y) * sin(r->x) * speed->value;
@@ -202,8 +202,8 @@ void EcsMove3D_w_Velocity(ecs_rows_t *rows) {
 
     int i;
     for (i = 0; i < rows->count; i ++) {
-        EcsSpeed *speed = ecs_field(rows, EcsSpeed, i, 2);
-        EcsVelocity3D *v = ecs_field(rows, EcsVelocity3D, i, 3);
+        EcsSpeed *speed = ecs_field(rows, EcsSpeed, 2, i);
+        EcsVelocity3D *v = ecs_field(rows, EcsVelocity3D, 3, i);
         float x_speed = v->x;
         float y_speed = v->y;
         float z_speed = v->z;
@@ -224,8 +224,8 @@ void EcsRotate3D(ecs_rows_t *rows) {
 
     int i;
     for (i = 0; i < rows->count; i ++) {
-        EcsAngularSpeed *s = ecs_field(rows, EcsAngularSpeed, i, 2);
-        EcsAngularVelocity *v = ecs_field(rows, EcsAngularVelocity, i, 3);
+        EcsAngularSpeed *s = ecs_field(rows, EcsAngularSpeed, 2, i);
+        EcsAngularVelocity *v = ecs_field(rows, EcsAngularVelocity, 3, i);
         float speed = 1;
 
         if (s) {

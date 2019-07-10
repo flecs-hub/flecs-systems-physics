@@ -31,7 +31,7 @@ void FlecsSystemsPhysicsImport(
 
         ECS_SYSTEM(world, EcsGravity2D, EcsOnUpdate, EcsVelocity2D, EcsRigidBody);
 
-        ECS_SYSTEM(world, EcsCollide2D, EcsPostUpdate, EcsCollision2D, ID.EcsPosition2D, ID.EcsVelocity2D, ID.EcsBounciness, ID.EcsFriction, ID.EcsRigidBody);
+        ECS_SYSTEM(world, EcsCollide2D, EcsPostUpdate, EcsCollision2D, .EcsPosition2D, .EcsVelocity2D, .EcsBounciness, .EcsFriction, .EcsRigidBody);
 
         ECS_TYPE(world, EcsMove2D, EcsMove2D_w_Rotation, EcsMove2D_w_Velocity, EcsRotate2D);
 
@@ -51,11 +51,11 @@ void FlecsSystemsPhysicsImport(
         /* Do collision testing */
         ECS_SYSTEM(world, EcsTestColliders, EcsManual,
             EcsPolygon8ColliderWorld | EcsCircleColliderWorld,
-            ID.EcsPolygon8ColliderWorld,
-            ID.EcsCircleColliderWorld,
-            ID.EcsCollision2D, SYSTEM.EcsHidden);
+            .EcsPolygon8ColliderWorld,
+            .EcsCircleColliderWorld,
+            .EcsCollision2D, SYSTEM.EcsHidden);
 
-        ECS_SYSTEM(world, EcsWalkColliders, EcsOnValidate, EcsPolygon8ColliderWorld | EcsCircleColliderWorld, ID.EcsTestColliders, SYSTEM.EcsHidden);
+        ECS_SYSTEM(world, EcsWalkColliders, EcsOnValidate, EcsPolygon8ColliderWorld | EcsCircleColliderWorld, .EcsTestColliders, SYSTEM.EcsHidden);
         
         /* Clean collisions for next frame */
         ECS_SYSTEM(world, EcsCleanCollisions, EcsPreUpdate, EcsCollision2D, SYSTEM.EcsHidden);

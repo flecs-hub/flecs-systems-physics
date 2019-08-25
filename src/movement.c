@@ -6,7 +6,7 @@
 #define ECS_air_density (1.225)
 
 void EcsAddRotate2D(ecs_rows_t *rows) {
-    ecs_type_t TEcsRotation2D = ecs_column_type(rows, 2);
+    ecs_entity_t ecs_entity(EcsRotation2D) = ecs_column_entity(rows, 2);
 
     int i;
     for (i = 0; i < rows->count; i ++) {

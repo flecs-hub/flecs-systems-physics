@@ -19,28 +19,21 @@
 
 /* Headers of public dependencies */
 #include <flecs.h>
-#include <flecs_math.h>
 #include <flecs_components_transform.h>
-#include <flecs_components_geometry.h>
 #include <flecs_components_physics.h>
-#include <flecs_systems_transform.h>
-
-/* Headers of private dependencies */
-#ifdef FLECS_SYSTEMS_PHYSICS_IMPL
-/* No dependencies */
-#endif
+#include <cglm.h>
 
 /* Convenience macro for exporting symbols */
-#ifndef FLECS_SYSTEMS_PHYSICS_STATIC
-  #if FLECS_SYSTEMS_PHYSICS_IMPL && (defined(_MSC_VER) || defined(__MINGW32__))
-    #define FLECS_SYSTEMS_PHYSICS_EXPORT __declspec(dllexport)
-  #elif FLECS_SYSTEMS_PHYSICS_IMPL
-    #define FLECS_SYSTEMS_PHYSICS_EXPORT __attribute__((__visibility__("default")))
-  #elif defined _MSC_VER
-    #define FLECS_SYSTEMS_PHYSICS_EXPORT __declspec(dllimport)
-  #else
-    #define FLECS_SYSTEMS_PHYSICS_EXPORT
-  #endif
+#ifndef flecs_systems_physics_STATIC
+#if flecs_systems_physics_EXPORTS && (defined(_MSC_VER) || defined(__MINGW32__))
+  #define FLECS_SYSTEMS_PHYSICS_EXPORT __declspec(dllexport)
+#elif flecs_systems_physics_EXPORTS
+  #define FLECS_SYSTEMS_PHYSICS_EXPORT __attribute__((__visibility__("default")))
+#elif defined _MSC_VER
+  #define FLECS_SYSTEMS_PHYSICS_EXPORT __declspec(dllimport)
+#else
+  #define FLECS_SYSTEMS_PHYSICS_EXPORT
+#endif
 #else
   #define FLECS_SYSTEMS_PHYSICS_EXPORT
 #endif

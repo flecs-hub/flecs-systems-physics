@@ -1,44 +1,46 @@
 #ifndef FLECS_SYSTEMS_PHYSICS_H
 #define FLECS_SYSTEMS_PHYSICS_H
 
-#include <flecs-systems-physics/bake_config.h>
-#include <flecs-systems-physics/physics_2d.h>
+/* This generated file contains includes for project dependencies */
+#include "flecs-systems-physics/bake_config.h"
+#include "flecs-systems-physics/octree.h"
+#include "flecs-systems-physics/spatial_query.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 typedef struct FlecsSystemsPhysics {
-   ECS_DECLARE_ENTITY(EcsMove2D_w_Rotation);
-   ECS_DECLARE_ENTITY(EcsMove2D_w_Velocity);
-   ECS_DECLARE_ENTITY(EcsMove2D);
-   ECS_DECLARE_ENTITY(EcsMove3D_w_Rotation);
-   ECS_DECLARE_ENTITY(EcsMove3D_w_Velocity);
-   ECS_DECLARE_ENTITY(EcsMove3D);
-   ECS_DECLARE_ENTITY(EcsRotate2D);
-   ECS_DECLARE_ENTITY(EcsRotate3D);
-   ECS_DECLARE_ENTITY(EcsMove);
-   ECS_DECLARE_ENTITY(EcsCollide);
+    int dummy_;
 } FlecsSystemsPhysics;
 
+FLECS_SYSTEMS_PHYSICS_EXPORT
 void FlecsSystemsPhysicsImport(
-    ecs_world_t *world,
-    int flags);
+    ecs_world_t *world);
 
-#define FlecsSystemsPhysicsImportHandles(handles)\
-    ECS_IMPORT_ENTITY(handles, EcsMove2D_w_Rotation);\
-    ECS_IMPORT_ENTITY(handles, EcsMove2D_w_Velocity);\
-    ECS_IMPORT_ENTITY(handles, EcsMove2D);\
-    ECS_IMPORT_ENTITY(handles, EcsMove3D_w_Rotation);\
-    ECS_IMPORT_ENTITY(handles, EcsMove3D_w_Velocity);\
-    ECS_IMPORT_ENTITY(handles, EcsMove3D);\
-    ECS_IMPORT_ENTITY(handles, EcsRotate2D);\
-    ECS_IMPORT_ENTITY(handles, EcsRotate3D);\
-    ECS_IMPORT_ENTITY(handles, EcsMove);\
-    ECS_IMPORT_ENTITY(handles, EcsCollide);
+#define FlecsSystemsPhysicsImportHandles(handles)
 
 #ifdef __cplusplus
 }
+#endif
+
+#ifdef __cplusplus
+
+namespace flecs {
+namespace systems {
+
+class physics : FlecsSystemsPhysics {
+public:
+    physics(flecs::world& ecs) {
+        FlecsSystemsPhysicsImport(ecs.c_ptr());
+
+        ecs.module<flecs::systems::physics>();
+    }
+};
+
+}
+}
+
 #endif
 
 #endif

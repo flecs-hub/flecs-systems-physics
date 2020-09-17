@@ -5,7 +5,7 @@ struct ecs_squery_t {
     ecs_octree_t *ot;
 };
 
-#define EXPR_PREFIX "flecs.components.transform.Position3,"
+#define EXPR_PREFIX "[in] flecs.components.transform.Position3,"
 
 ecs_squery_t* ecs_squery_new(
     ecs_world_t *world,
@@ -23,9 +23,11 @@ ecs_squery_t* ecs_squery_new(
      * updating the octree */
     char *full_expr = ecs_os_malloc(strlen(expr) + strlen(EXPR_PREFIX) + 1);
     sprintf(full_expr, EXPR_PREFIX "%s", expr);
-
     result->q = ecs_query_new(world, full_expr);
     result->ot = ecs_octree_new(center, size);
+
+    ecs_assert(result->q != NULL, ECS_INTERNAL_ERROR, NULL);
+    ecs_assert(result->ot != NULL, ECS_INTERNAL_ERROR, NULL);
 
     return result;
 }
@@ -41,6 +43,10 @@ void ecs_squery_free(
 void ecs_squery_update(
     ecs_squery_t *sq)
 {
+    ecs_assert(sq != NULL, ECS_INVALID_PARAMETER, NULL);
+    ecs_assert(sq->q != NULL, ECS_INVALID_PARAMETER, NULL);
+    ecs_assert(sq->ot != NULL, ECS_INVALID_PARAMETER, NULL);
+
     if (ecs_query_changed(sq->q)) {
         ecs_octree_clear(sq->ot);
 
@@ -55,9 +61,9 @@ void ecs_squery_update(
                 vp[1] = p[i].y;
                 vp[2] = p[i].z;
 
-                vs[0] = 1;
-                vs[1] = 1;
-                vs[2] = 1;
+                vs[0] = 0.2;
+                vs[1] = 0.2;
+                vs[2] = 0.2;
 
                 ecs_octree_insert(sq->ot, it.entities[i], vp, vs);
             }
@@ -66,11 +72,14 @@ void ecs_squery_update(
 }
 
 void ecs_squery_findn(
-    ecs_squery_t *sq,
+    const ecs_squery_t *sq,
     vec3 position,
     float range,
     ecs_vector_t **result)
 {
-    ecs_squery_update(sq);
+    ecs_assert(sq != NULL, ECS_INVALID_PARAMETER, NULL);
+    ecs_assert(sq->q != NULL, ECS_INVALID_PARAMETER, NULL);
+    ecs_assert(sq->ot != NULL, ECS_INVALID_PARAMETER, NULL);    
+
     ecs_octree_findn(sq->ot, position, range, result);
 }

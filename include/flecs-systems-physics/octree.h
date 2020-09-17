@@ -42,6 +42,10 @@ void ecs_octree_findn(
     float range,
     ecs_vector_t **result);
 
+FLECS_SYSTEMS_PHYSICS_EXPORT
+int32_t ecs_octree_dump(
+    ecs_octree_t *ot);
+
 #ifdef __cplusplus
 }
 #endif

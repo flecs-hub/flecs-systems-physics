@@ -6,9 +6,10 @@
         "description": "Flecs module package",
         "use": [
             "flecs",
+            "cglm",
             "flecs.components.transform",
-            "flecs.components.physics",
-            "cglm"
+            "flecs.components.geometry",
+            "flecs.components.physics"
         ]
     }
 }

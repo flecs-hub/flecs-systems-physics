@@ -190,6 +190,7 @@ cube_t* cube_insert(
     glm_vec3_copy(cube_center, center);
     float size = cube_size / 2;
     cube_t *cur = cube;
+    ecs_oct_entity_t e = *ce;
 
     if (!is_inside(center, size, ce->pos, ce->size)) {
         return NULL;
@@ -207,10 +208,10 @@ cube_t* cube_insert(
         vec3 child_center;
         glm_vec3_copy(center, child_center);
         float child_size = size / 2;
-        int8_t cube_i = next_cube_index(child_center, child_size, ce->pos);
+        int8_t cube_i = next_cube_index(child_center, child_size, e.pos);
         
         /* If entity does not fit in child cube, insert into current */
-        if (!is_inside(child_center, child_size, ce->pos, ce->size)) {
+        if (!is_inside(child_center, child_size, e.pos, e.size)) {
             break;
         }
 
@@ -239,7 +240,7 @@ cube_t* cube_insert(
         glm_vec3_copy(child_center, center);
     } while (1);
 
-    cube_add_entity(cur, ce);
+    cube_add_entity(cur, &e);
 
     return cur;
 }
@@ -258,6 +259,7 @@ void cube_split(
     cube->is_leaf = false; 
 
     for (i = 0; i < count; i ++) {
+        ecs_oct_entity_t *entities = ecs_vector_first(cube->entities, ecs_oct_entity_t);
         cube_t *new_cube = cube_insert(ot, &entities[i], cube, center, size);
         ecs_assert(new_cube != NULL, ECS_INTERNAL_ERROR, NULL);
 
@@ -317,6 +319,7 @@ void cube_findn(
 
     ecs_oct_entity_t *entities = ecs_vector_first(cube->entities, ecs_oct_entity_t);
     int32_t i, count = ecs_vector_count(cube->entities);
+
     for (i = 0; i < count; i ++) {
         ecs_oct_entity_t *e = &entities[i];
         if (entity_overlaps(pos, range, e->pos, e->size)) {
@@ -415,7 +418,7 @@ void ecs_octree_findn(
     ecs_assert(ot != NULL, ECS_INVALID_PARAMETER, NULL);
 
     ecs_vector_clear(*result);
-    return cube_findn(&ot->root, ot->center, ot->size, pos, range, result);
+    return cube_findn(&ot->root, ot->center, ot->size / 2, pos, range, result);
 }
 
 static
@@ -428,7 +431,6 @@ int cube_dump(
     glm_vec3_copy(center, c);
 
     static int indent = 0;
-    printf("[%p] CUBE %*s%f - {%f, %f, %f} - %d\n", cube, indent * 2, "", size, c[0], c[1], c[2], ecs_vector_count(cube->entities));
     indent ++;
 
     size /= 2;
@@ -449,7 +451,7 @@ int32_t ecs_octree_dump(
     ecs_octree_t *ot)
 {
     ecs_assert(ot != NULL, ECS_INVALID_PARAMETER, NULL);
-    int32_t ret = cube_dump(&ot->root, ot->center, ot->size);
+    int32_t ret = cube_dump(&ot->root, ot->center, ot->size / 2);
     printf("counted = %d, actual = %d\n", ret, ot->count);
     ecs_assert(ret == ot->count, ECS_INTERNAL_ERROR, NULL);
     return ret;

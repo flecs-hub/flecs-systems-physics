@@ -46,6 +46,30 @@ void EcsMove3(ecs_iter_t *it) {
 }
 
 static
+void EcsAddBoxCollider(ecs_iter_t *it) {
+    EcsBox *box = ecs_column(it, EcsBox, 2);
+    ecs_entity_t C = ecs_column_entity(it, 1);
+    ecs_entity_t B = ecs_column_entity(it, 2);
+
+    int i;
+    if (ecs_is_owned(it, 2)) {
+        for (i = 0; i < it->count; i ++) {
+            ecs_entity_t trait = ecs_trait(B, C);
+            EcsBox *collider = ecs_get_mut_w_entity(
+                it->world, it->entities[i], trait, NULL);
+            memcpy(collider, &box[i], sizeof(EcsBox));
+        }
+    } else {
+        for (i = 0; i < it->count; i ++) {
+            ecs_entity_t trait = ecs_trait(B, C);
+            EcsBox *collider = ecs_get_mut_w_entity(
+                it->world, it->entities[i], trait, NULL);
+            memcpy(collider, box, sizeof(EcsBox));
+        }
+    }
+}
+
+static
 void EcsUpdateSpatialQuery(ecs_iter_t *it) {
     EcsSpatialQuery *q = ecs_column(it, EcsSpatialQuery, 1);
 
@@ -87,6 +111,11 @@ void FlecsSystemsPhysicsImport(
         flecs.components.transform.Position3,
         flecs.components.physics.Velocity3,
         SYSTEM:Hidden);
+
+    ECS_SYSTEM(world, EcsAddBoxCollider, EcsPostLoad, 
+        flecs.components.physics.Collider,
+        ANY:flecs.components.geometry.Box,
+        !flecs.components.physics.Collider FOR flecs.components.geometry.Box);
 
     ECS_SYSTEM(world, EcsUpdateSpatialQuery, EcsPreUpdate, 
         TRAIT | SpatialQuery, ?Prefab);

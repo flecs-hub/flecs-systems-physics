@@ -19,9 +19,10 @@
 
 /* Headers of public dependencies */
 #include <flecs.h>
-#include <flecs_components_transform.h>
-#include <flecs_components_physics.h>
 #include <cglm.h>
+#include <flecs_components_transform.h>
+#include <flecs_components_geometry.h>
+#include <flecs_components_physics.h>
 
 /* Convenience macro for exporting symbols */
 #ifndef flecs_systems_physics_STATIC

@@ -5,7 +5,9 @@ struct ecs_squery_t {
     ecs_octree_t *ot;
 };
 
-#define EXPR_PREFIX "[in] flecs.components.transform.Position3,"
+#define EXPR_PREFIX\
+    "[in] flecs.components.transform.Position3,"\
+    "[in] ANY:flecs.components.physics.Collider FOR flecs.components.geometry.Box || ANY:flecs.components.geometry.Box,"
 
 ecs_squery_t* ecs_squery_new(
     ecs_world_t *world,
@@ -53,19 +55,36 @@ void ecs_squery_update(
         ecs_iter_t it = ecs_query_iter(sq->q);
         while (ecs_query_next(&it)) {
             EcsPosition3 *p = ecs_column(&it, EcsPosition3, 1);
+            EcsBox *b = ecs_column(&it, EcsBox, 2);
 
-            int i;
-            for (i = 0; i < it.count; i ++) {
-                vec3 vp, vs;
-                vp[0] = p[i].x;
-                vp[1] = p[i].y;
-                vp[2] = p[i].z;
+            if (ecs_is_owned(&it, 2)) {
+                int i;
+                for (i = 0; i < it.count; i ++) {
+                    vec3 vp, vs;
+                    vp[0] = p[i].x;
+                    vp[1] = p[i].y;
+                    vp[2] = p[i].z;
 
-                vs[0] = 0.2;
-                vs[1] = 0.2;
-                vs[2] = 0.2;
+                    vs[0] = b[i].width;
+                    vs[1] = b[i].height;
+                    vs[2] = b[i].depth;
 
-                ecs_octree_insert(sq->ot, it.entities[i], vp, vs);
+                    ecs_octree_insert(sq->ot, it.entities[i], vp, vs);
+                }
+            } else {
+                int i;
+                for (i = 0; i < it.count; i ++) {
+                    vec3 vp, vs;
+                    vp[0] = p[i].x;
+                    vp[1] = p[i].y;
+                    vp[2] = p[i].z;
+
+                    vs[0] = b->width;
+                    vs[1] = b->height;
+                    vs[2] = b->depth;
+
+                    ecs_octree_insert(sq->ot, it.entities[i], vp, vs);
+                }
             }
         }
     }

@@ -252,7 +252,6 @@ void cube_split(
     vec3 center,
     float size)
 {
-    ecs_oct_entity_t *entities = ecs_vector_first(cube->entities, ecs_oct_entity_t);
     int32_t i, count = ecs_vector_count(cube->entities);
 
     /* This will force entities to be pushed to child nodes */

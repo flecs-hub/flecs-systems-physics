@@ -27,8 +27,8 @@ void EcsMove2(ecs_iter_t *it) {
 
     int i;
     for (i = 0; i < it->count; i ++) {
-        p[i].x += v[i].x;
-        p[i].y += v[i].y;
+        p[i].x += v[i].x * it->delta_time;
+        p[i].y += v[i].y * it->delta_time;
     }
 }
 
@@ -39,9 +39,9 @@ void EcsMove3(ecs_iter_t *it) {
 
     int i;
     for (i = 0; i < it->count; i ++) {
-        p[i].x += v[i].x;
-        p[i].y += v[i].y;
-        p[i].z += v[i].z;
+        p[i].x += v[i].x * it->delta_time;
+        p[i].y += v[i].y * it->delta_time;
+        p[i].z += v[i].z * it->delta_time;
     }
 }
 

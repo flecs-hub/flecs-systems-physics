@@ -36,7 +36,7 @@ typedef struct FlecsSystemsPhysics {
     ECS_DECLARE_COMPONENT(EcsSpatialQuery);
 } FlecsSystemsPhysics;
 
-FLECS_SYSTEMS_PHYSICS_EXPORT
+FLECS_SYSTEMS_PHYSICS_API
 void FlecsSystemsPhysicsImport(
     ecs_world_t *world);
 

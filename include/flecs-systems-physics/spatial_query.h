@@ -10,22 +10,22 @@ extern "C" {
 
 typedef struct ecs_squery_t ecs_squery_t;
 
-FLECS_SYSTEMS_PHYSICS_EXPORT
+FLECS_SYSTEMS_PHYSICS_API
 ecs_squery_t* ecs_squery_new(
     ecs_world_t *world,
     const char *expr,
     vec3 center,
     float size);
 
-FLECS_SYSTEMS_PHYSICS_EXPORT
+FLECS_SYSTEMS_PHYSICS_API
 void ecs_squery_free(
     ecs_squery_t *sq);
 
-FLECS_SYSTEMS_PHYSICS_EXPORT
+FLECS_SYSTEMS_PHYSICS_API
 void ecs_squery_update(
     ecs_squery_t *sq);    
 
-FLECS_SYSTEMS_PHYSICS_EXPORT
+FLECS_SYSTEMS_PHYSICS_API
 void ecs_squery_findn(
     const ecs_squery_t *sq,
     vec3 position,

@@ -1,4 +1,5 @@
 #include <flecs-systems-physics/octree.h>
+#include <flecs/private/sparse.h>
 
 #define MAX_PER_OCTANT (8)
 
@@ -263,7 +264,7 @@ void cube_split(
         ecs_assert(new_cube != NULL, ECS_INTERNAL_ERROR, NULL);
 
         if (new_cube != cube) {
-            ecs_vector_remove_index(cube->entities, ecs_oct_entity_t, i);
+            ecs_vector_remove(cube->entities, ecs_oct_entity_t, i);
             i --;
             count --;
             ecs_assert(count == ecs_vector_count(cube->entities), ECS_INTERNAL_ERROR, NULL);
@@ -365,7 +366,7 @@ void ecs_octree_clear(
      * octree memory to stabilize eventually. */
     int32_t i, count = ecs_sparse_count(ot->cubes);
     for (i = 0; i < count; i ++) {
-        cube_t *cube = ecs_sparse_get(ot->cubes, cube_t, i);
+        cube_t *cube = ecs_sparse_get_dense(ot->cubes, cube_t, i);
         ecs_vector_clear(cube->entities);
         memset(cube->nodes, 0, sizeof(cube_t*) * 8);
 

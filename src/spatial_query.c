@@ -37,7 +37,7 @@ ecs_squery_t* ecs_squery_new(
 void ecs_squery_free(
     ecs_squery_t *sq)
 {
-    ecs_query_free(sq->q);
+    ecs_query_fini(sq->q);
     ecs_octree_free(sq->ot);
     ecs_os_free(sq);
 }
@@ -52,12 +52,13 @@ void ecs_squery_update(
     if (ecs_query_changed(sq->q)) {
         ecs_octree_clear(sq->ot);
 
-        ecs_iter_t it = ecs_query_iter(sq->q);
+        const ecs_world_t *world = ecs_get_world(sq->q);
+        ecs_iter_t it = ecs_query_iter(world, sq->q);
         while (ecs_query_next(&it)) {
-            EcsPosition3 *p = ecs_column(&it, EcsPosition3, 1);
-            EcsBox *b = ecs_column(&it, EcsBox, 2);
+            EcsPosition3 *p = ecs_term(&it, EcsPosition3, 1);
+            EcsBox *b = ecs_term(&it, EcsBox, 2);
 
-            if (ecs_is_owned(&it, 2)) {
+            if (ecs_term_is_owned(&it, 2)) {
                 int i;
                 for (i = 0; i < it.count; i ++) {
                     vec3 vp, vs;

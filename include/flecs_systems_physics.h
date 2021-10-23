@@ -6,19 +6,27 @@
 #include "flecs-systems-physics/octree.h"
 #include "flecs-systems-physics/spatial_query.h"
 
+// Don't use reflection, but use utility macro's for auto-exporting variables
+#undef ECS_META_IMPL
+#ifndef flecs_systems_physics_EXPORTS
+#define ECS_META_IMPL EXTERN
+#else
+#define ECS_META_IMPL DECLARE
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 #ifndef __cplusplus
 
-typedef struct EcsSpatialQuery {
+ECS_STRUCT(EcsSpatialQuery, {
     ecs_squery_t *query;
-} EcsSpatialQuery;
+});
 
-typedef struct EcsSpatialQueryResult {
+ECS_STRUCT(EcsSpatialQueryResult, {
     ecs_vector_t *results;
-} EcsSpatialQueryResult;
+});
 
 #else
 
@@ -32,16 +40,9 @@ typedef struct EcsSpatialQueryResult {
 
 #endif
 
-typedef struct FlecsSystemsPhysics {
-    ECS_DECLARE_COMPONENT(EcsSpatialQuery);
-} FlecsSystemsPhysics;
-
 FLECS_SYSTEMS_PHYSICS_API
 void FlecsSystemsPhysicsImport(
     ecs_world_t *world);
-
-#define FlecsSystemsPhysicsImportHandles(handles)\
-    ECS_IMPORT_COMPONENT(EcsSpatialQuery)
 
 #ifdef __cplusplus
 }

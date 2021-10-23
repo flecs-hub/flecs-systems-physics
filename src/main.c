@@ -22,8 +22,8 @@ ECS_DTOR(EcsSpatialQueryResult, ptr, {
 
 static
 void EcsMove2(ecs_iter_t *it) {
-    EcsPosition2 *p = ecs_column(it, EcsPosition2, 1);
-    EcsVelocity2 *v = ecs_column(it, EcsVelocity2, 1);
+    EcsPosition2 *p = ecs_term(it, EcsPosition2, 1);
+    EcsVelocity2 *v = ecs_term(it, EcsVelocity2, 1);
 
     int i;
     for (i = 0; i < it->count; i ++) {
@@ -34,8 +34,8 @@ void EcsMove2(ecs_iter_t *it) {
 
 static
 void EcsMove3(ecs_iter_t *it) {
-    EcsPosition3 *p = ecs_column(it, EcsPosition3, 1);
-    EcsVelocity3 *v = ecs_column(it, EcsVelocity3, 2);
+    EcsPosition3 *p = ecs_term(it, EcsPosition3, 1);
+    EcsVelocity3 *v = ecs_term(it, EcsVelocity3, 2);
 
     int i;
     for (i = 0; i < it->count; i ++) {
@@ -47,31 +47,31 @@ void EcsMove3(ecs_iter_t *it) {
 
 static
 void EcsAddBoxCollider(ecs_iter_t *it) {
-    EcsBox *box = ecs_column(it, EcsBox, 2);
-    ecs_entity_t C = ecs_column_entity(it, 1);
-    ecs_entity_t B = ecs_column_entity(it, 2);
+    EcsBox *box = ecs_term(it, EcsBox, 2);
+    ecs_entity_t C = ecs_term_id(it, 1);
+    ecs_entity_t B = ecs_term_id(it, 2);
 
     int i;
-    if (ecs_is_owned(it, 2)) {
+    if (ecs_term_is_owned(it, 2)) {
         for (i = 0; i < it->count; i ++) {
-            ecs_entity_t trait = ecs_trait(B, C);
-            EcsBox *collider = ecs_get_mut_w_entity(
-                it->world, it->entities[i], trait, NULL);
-            memcpy(collider, &box[i], sizeof(EcsBox));
+            ecs_entity_t pair = ecs_pair(C, B);
+            EcsBox *collider = ecs_get_mut_id(
+                it->world, it->entities[i], pair, NULL);
+            ecs_os_memcpy_t(collider, &box[i], EcsBox);
         }
     } else {
         for (i = 0; i < it->count; i ++) {
-            ecs_entity_t trait = ecs_trait(B, C);
-            EcsBox *collider = ecs_get_mut_w_entity(
-                it->world, it->entities[i], trait, NULL);
-            memcpy(collider, box, sizeof(EcsBox));
+            ecs_entity_t pair = ecs_pair(C, B);
+            EcsBox *collider = ecs_get_mut_id(
+                it->world, it->entities[i], pair, NULL);
+            ecs_os_memcpy_t(collider, box, EcsBox);
         }
     }
 }
 
 static
 void EcsUpdateSpatialQuery(ecs_iter_t *it) {
-    EcsSpatialQuery *q = ecs_column(it, EcsSpatialQuery, 1);
+    EcsSpatialQuery *q = ecs_term(it, EcsSpatialQuery, 1);
 
     int i;
     for (i = 0; i < it->count; i ++) {
@@ -83,14 +83,13 @@ void FlecsSystemsPhysicsImport(
     ecs_world_t *world)
 {
     ECS_MODULE(world, FlecsSystemsPhysics);
-
     ECS_IMPORT(world, FlecsComponentsTransform);
     ECS_IMPORT(world, FlecsComponentsPhysics);
 
     ecs_set_name_prefix(world, "Ecs");
 
-    ECS_COMPONENT(world, EcsSpatialQuery);
-    ECS_COMPONENT(world, EcsSpatialQueryResult);
+    ECS_COMPONENT_DEFINE(world, EcsSpatialQuery);
+    ECS_COMPONENT_DEFINE(world, EcsSpatialQueryResult);
 
     ecs_set_component_actions(world, EcsSpatialQuery, {
         .ctor = ecs_ctor(EcsSpatialQuery),
@@ -104,21 +103,17 @@ void FlecsSystemsPhysicsImport(
 
     ECS_SYSTEM(world, EcsMove2, EcsOnUpdate, 
         flecs.components.transform.Position2,
-        flecs.components.physics.Velocity2,
-        SYSTEM:Hidden);
+        flecs.components.physics.Velocity2);
 
     ECS_SYSTEM(world, EcsMove3, EcsOnUpdate, 
         flecs.components.transform.Position3,
-        flecs.components.physics.Velocity3,
-        SYSTEM:Hidden);
+        flecs.components.physics.Velocity3);
 
     ECS_SYSTEM(world, EcsAddBoxCollider, EcsPostLoad, 
         flecs.components.physics.Collider,
-        ANY:flecs.components.geometry.Box,
-        !flecs.components.physics.Collider FOR flecs.components.geometry.Box);
+        flecs.components.geometry.Box(self|super),
+        !(flecs.components.physics.Collider, flecs.components.geometry.Box));
 
     ECS_SYSTEM(world, EcsUpdateSpatialQuery, EcsPreUpdate, 
-        TRAIT | SpatialQuery, ?Prefab);
-
-    ECS_EXPORT_COMPONENT(EcsSpatialQuery);
+        (SpatialQuery, *), ?Prefab);
 }

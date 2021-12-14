@@ -8,7 +8,7 @@
 
 // Don't use reflection, but use utility macro's for auto-exporting variables
 #undef ECS_META_IMPL
-#ifndef flecs_systems_physics_EXPORTS
+#ifndef FLECS_SYSTEMS_PHYSICS_IMPL
 #define ECS_META_IMPL EXTERN
 #else
 #define ECS_META_IMPL DECLARE

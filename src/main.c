@@ -1,24 +1,25 @@
+#define FLECS_SYSTEMS_PHYSICS_IMPL
 #include <flecs_systems_physics.h>
 
 ECS_CTOR(EcsSpatialQuery, ptr, {
     ptr->query = NULL;
-});
+})
 
 ECS_DTOR(EcsSpatialQuery, ptr, {
     if (ptr->query) {
         ecs_squery_free(ptr->query);
     }
-});
+})
 
 ECS_CTOR(EcsSpatialQueryResult, ptr, {
     ptr->results = NULL;
-});
+})
 
 ECS_DTOR(EcsSpatialQueryResult, ptr, {
     if (ptr->results) {
         ecs_vector_free(ptr->results);
     }
-});
+})
 
 static
 void EcsMove2(ecs_iter_t *it) {
@@ -42,6 +43,19 @@ void EcsMove3(ecs_iter_t *it) {
         p[i].x += v[i].x * it->delta_time;
         p[i].y += v[i].y * it->delta_time;
         p[i].z += v[i].z * it->delta_time;
+    }
+}
+
+static
+void EcsRotate3(ecs_iter_t *it) {
+    EcsRotation3 *r = ecs_term(it, EcsRotation3, 1);
+    EcsAngularVelocity *a = ecs_term(it, EcsAngularVelocity, 2);
+
+    int i;
+    for (i = 0; i < it->count; i ++) {
+        r[i].x += a[i].x * it->delta_time;
+        r[i].y += a[i].y * it->delta_time;
+        r[i].z += a[i].z * it->delta_time;
     }
 }
 
@@ -85,6 +99,7 @@ void FlecsSystemsPhysicsImport(
     ECS_MODULE(world, FlecsSystemsPhysics);
     ECS_IMPORT(world, FlecsComponentsTransform);
     ECS_IMPORT(world, FlecsComponentsPhysics);
+    ECS_IMPORT(world, FlecsComponentsGeometry);
 
     ecs_set_name_prefix(world, "Ecs");
 
@@ -108,6 +123,10 @@ void FlecsSystemsPhysicsImport(
     ECS_SYSTEM(world, EcsMove3, EcsOnUpdate, 
         flecs.components.transform.Position3,
         flecs.components.physics.Velocity3);
+
+    ECS_SYSTEM(world, EcsRotate3, EcsOnUpdate, 
+        flecs.components.transform.Rotation3,
+        flecs.components.physics.AngularVelocity);
 
     ECS_SYSTEM(world, EcsAddBoxCollider, EcsPostLoad, 
         flecs.components.physics.Collider,

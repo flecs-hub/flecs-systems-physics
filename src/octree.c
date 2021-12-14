@@ -1,5 +1,4 @@
 #include <flecs-systems-physics/octree.h>
-#include <flecs/private/sparse.h>
 
 #define MAX_PER_OCTANT (8)
 
@@ -418,7 +417,7 @@ void ecs_octree_findn(
     ecs_assert(ot != NULL, ECS_INVALID_PARAMETER, NULL);
 
     ecs_vector_clear(*result);
-    return cube_findn(&ot->root, ot->center, ot->size / 2, pos, range, result);
+    cube_findn(&ot->root, ot->center, ot->size / 2, pos, range, result);
 }
 
 static

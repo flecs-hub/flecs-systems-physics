@@ -24,7 +24,7 @@ ECS_DTOR(EcsSpatialQueryResult, ptr, {
 static
 void EcsMove2(ecs_iter_t *it) {
     EcsPosition2 *p = ecs_term(it, EcsPosition2, 1);
-    EcsVelocity2 *v = ecs_term(it, EcsVelocity2, 1);
+    EcsVelocity2 *v = ecs_term(it, EcsVelocity2, 2);
 
     int i;
     for (i = 0; i < it->count; i ++) {

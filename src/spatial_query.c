@@ -7,7 +7,7 @@ struct ecs_squery_t {
 
 #define EXPR_PREFIX\
     "[in] flecs.components.transform.Position3,"\
-    "[in] ANY:flecs.components.physics.Collider FOR flecs.components.geometry.Box || ANY:flecs.components.geometry.Box,"
+    "[in] (flecs.components.physics.Collider, flecs.components.geometry.Box) || flecs.components.geometry.Box,"
 
 ecs_squery_t* ecs_squery_new(
     ecs_world_t *world,
@@ -49,7 +49,7 @@ void ecs_squery_update(
     ecs_assert(sq->q != NULL, ECS_INVALID_PARAMETER, NULL);
     ecs_assert(sq->ot != NULL, ECS_INVALID_PARAMETER, NULL);
 
-    if (ecs_query_changed(sq->q)) {
+    if (ecs_query_changed(sq->q, 0)) {
         ecs_octree_clear(sq->ot);
 
         const ecs_world_t *world = ecs_get_world(sq->q);

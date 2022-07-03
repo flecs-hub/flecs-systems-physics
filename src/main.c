@@ -70,14 +70,14 @@ void EcsAddBoxCollider(ecs_iter_t *it) {
         for (i = 0; i < it->count; i ++) {
             ecs_entity_t pair = ecs_pair(C, B);
             EcsBox *collider = ecs_get_mut_id(
-                it->world, it->entities[i], pair, NULL);
+                it->world, it->entities[i], pair);
             ecs_os_memcpy_t(collider, &box[i], EcsBox);
         }
     } else {
         for (i = 0; i < it->count; i ++) {
             ecs_entity_t pair = ecs_pair(C, B);
             EcsBox *collider = ecs_get_mut_id(
-                it->world, it->entities[i], pair, NULL);
+                it->world, it->entities[i], pair);
             ecs_os_memcpy_t(collider, box, EcsBox);
         }
     }
@@ -106,12 +106,12 @@ void FlecsSystemsPhysicsImport(
     ECS_COMPONENT_DEFINE(world, EcsSpatialQuery);
     ECS_COMPONENT_DEFINE(world, EcsSpatialQueryResult);
 
-    ecs_set_component_actions(world, EcsSpatialQuery, {
+    ecs_set_hooks(world, EcsSpatialQuery, {
         .ctor = ecs_ctor(EcsSpatialQuery),
         .dtor = ecs_dtor(EcsSpatialQuery)
     });
 
-    ecs_set_component_actions(world, EcsSpatialQueryResult, {
+    ecs_set_hooks(world, EcsSpatialQueryResult, {
         .ctor = ecs_ctor(EcsSpatialQueryResult),
         .dtor = ecs_dtor(EcsSpatialQueryResult)
     });    

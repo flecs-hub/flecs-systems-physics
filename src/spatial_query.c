@@ -55,10 +55,10 @@ void ecs_squery_update(
         const ecs_world_t *world = ecs_get_world(sq->q);
         ecs_iter_t it = ecs_query_iter(world, sq->q);
         while (ecs_query_next(&it)) {
-            EcsPosition3 *p = ecs_term(&it, EcsPosition3, 1);
-            EcsBox *b = ecs_term(&it, EcsBox, 2);
+            EcsPosition3 *p = ecs_field(&it, EcsPosition3, 1);
+            EcsBox *b = ecs_field(&it, EcsBox, 2);
 
-            if (ecs_term_is_owned(&it, 2)) {
+            if (ecs_field_is_self(&it, 2)) {
                 int i;
                 for (i = 0; i < it.count; i ++) {
                     vec3 vp, vs;

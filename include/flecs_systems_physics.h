@@ -18,10 +18,10 @@
 extern "C" {
 #endif
 
-#ifndef __cplusplus
-
 FLECS_SYSTEMS_PHYSICS_API
 ECS_STRUCT(EcsSpatialQuery, {
+    vec3 center;
+    float size;
     ecs_squery_t *query;
 });
 
@@ -29,18 +29,6 @@ FLECS_SYSTEMS_PHYSICS_API
 ECS_STRUCT(EcsSpatialQueryResult, {
     ecs_vector_t *results;
 });
-
-#else
-
-typedef struct EcsSpatialQuery {
-    flecs::squery query;
-} EcsSpatialQuery;
-
-typedef struct EcsSpatialQueryResult {
-    flecs::vector<flecs::squery::entity> results;
-} EcsSpatialQueryResult;
-
-#endif
 
 FLECS_SYSTEMS_PHYSICS_API
 void FlecsSystemsPhysicsImport(
@@ -51,28 +39,72 @@ void FlecsSystemsPhysicsImport(
 #endif
 
 #ifdef __cplusplus
+#ifndef FLECS_NO_CPP
 
 namespace flecs {
 namespace systems {
 
-class physics : FlecsSystemsPhysics {
+class physics {
 public:
-    using SpatialQuery = EcsSpatialQuery;
-    using SpatialQueryResult = EcsSpatialQueryResult;
+    using oct_entity_t = ecs_oct_entity_t;
+
+    struct SpatialQuery : EcsSpatialQuery {
+        SpatialQuery() {
+            ecs_os_zeromem(center);
+            size = 0;
+            query = nullptr;
+        }
+
+        SpatialQuery(ecs_squery_t *q) {
+            query = q;
+        }
+
+        SpatialQuery(vec3 c, float s, ecs_squery_t *q = nullptr) {
+            ecs_os_memcpy_t(center, c, vec3);
+            size = s;
+            query = q;
+        }
+
+        void update() {
+            ecs_squery_update(query);
+        }
+
+        void findn(vec3 pos, float range, EcsSpatialQueryResult& qr) const {
+            ecs_squery_findn(query, pos, range, &qr.results);
+        }
+    };
+
+    struct SpatialQueryResult : EcsSpatialQueryResult {
+        using iterator = flecs::vector_iterator<oct_entity_t>;
+        
+        iterator begin() {
+            return iterator(static_cast<oct_entity_t*>(_ecs_vector_first(
+                results, ECS_VECTOR_T(oct_entity_t))), 
+                    0);
+        }
+
+        iterator end() {
+            return iterator(static_cast<oct_entity_t*>(_ecs_vector_last(
+                    results, ECS_VECTOR_T(oct_entity_t))),
+                        ecs_vector_count(results));
+        }
+    };
 
     physics(flecs::world& ecs) {
-        FlecsSystemsPhysicsImport(ecs.c_ptr());
+        // Load module contents
+        FlecsSystemsPhysicsImport(ecs);
 
+        // Bind C++ types with module contents
         ecs.module<flecs::systems::physics>();
-
-        ecs.component<SpatialQuery>("flecs::systems::physics::SpatialQuery");
-        ecs.component<SpatialQueryResult>("flecs::systems::physics::SpatialQueryResult");
+        ecs.component<SpatialQuery>();
+        ecs.component<SpatialQueryResult>();
     }
 };
 
 }
 }
 
+#endif
 #endif
 
 #endif

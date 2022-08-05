@@ -10,7 +10,7 @@ extern "C" {
 typedef struct ecs_octree_t ecs_octree_t;
 
 typedef struct ecs_oct_entity_t {
-    ecs_entity_t e;
+    ecs_entity_t id;
     vec3 pos;
     vec3 size;
 } ecs_oct_entity_t;

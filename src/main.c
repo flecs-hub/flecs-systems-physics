@@ -84,6 +84,17 @@ void EcsAddBoxCollider(ecs_iter_t *it) {
 }
 
 static
+void EcsOnSetSpatialQuery(ecs_iter_t *it) {
+    EcsSpatialQuery *q = ecs_field(it, EcsSpatialQuery, 1);
+    ecs_id_t id = ecs_field_id(it, 1);
+    ecs_id_t filter = ecs_pair_second(it->world, id);
+
+    for (int i = 0; i < it->count; i ++) {
+        q[i].query = ecs_squery_new(it->world, filter, q[i].center, q[i].size);
+    }
+}
+
+static
 void EcsUpdateSpatialQuery(ecs_iter_t *it) {
     EcsSpatialQuery *q = ecs_field(it, EcsSpatialQuery, 1);
 
@@ -132,6 +143,9 @@ void FlecsSystemsPhysicsImport(
         flecs.components.physics.Collider,
         flecs.components.geometry.Box(self|up),
         !(flecs.components.physics.Collider, flecs.components.geometry.Box));
+
+    ECS_SYSTEM(world, EcsOnSetSpatialQuery, EcsOnSet,
+        (SpatialQuery, *), ?Prefab);
 
     ECS_SYSTEM(world, EcsUpdateSpatialQuery, EcsPreUpdate, 
         (SpatialQuery, *), ?Prefab);

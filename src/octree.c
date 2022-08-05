@@ -396,7 +396,7 @@ int32_t ecs_octree_insert(
     ecs_assert(ot != NULL, ECS_INVALID_PARAMETER, NULL);
 
     ecs_oct_entity_t ce;
-    ce.e = e;
+    ce.id = e;
     glm_vec3_copy(e_pos, ce.pos);
     glm_vec3_copy(e_size, ce.size);
     cube_t *cube = cube_insert(ot, &ce, &ot->root, ot->center, ot->size);

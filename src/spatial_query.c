@@ -11,21 +11,23 @@ struct ecs_squery_t {
 
 ecs_squery_t* ecs_squery_new(
     ecs_world_t *world,
-    const char *expr,
+    ecs_id_t filter,
     vec3 center,
     float size)
 {
     ecs_assert(world != NULL, ECS_INVALID_PARAMETER, NULL);
-    ecs_assert(expr != NULL, ECS_INVALID_PARAMETER, NULL);
     ecs_assert(size > 0, ECS_INVALID_PARAMETER, NULL);
 
     ecs_squery_t *result = ecs_os_calloc(sizeof(ecs_squery_t));
 
-    /* Prepend position to query so we have fast access to entity position when
-     * updating the octree */
-    char *full_expr = ecs_os_malloc(strlen(expr) + strlen(EXPR_PREFIX) + 1);
-    sprintf(full_expr, EXPR_PREFIX "%s", expr);
-    result->q = ecs_query_new(world, full_expr);
+    result->q = ecs_query(world, {
+        .filter.terms = {
+            { ecs_id(EcsPosition3), .inout = EcsIn },
+            { ecs_pair(EcsCollider, ecs_id(EcsBox)), .inout = EcsIn, .oper = EcsOr }, { ecs_id(EcsBox) },
+            { filter, .inout = EcsIn }
+        }
+    });
+
     result->ot = ecs_octree_new(center, size);
 
     ecs_assert(result->q != NULL, ECS_INTERNAL_ERROR, NULL);

@@ -23,7 +23,8 @@ ecs_squery_t* ecs_squery_new(
     result->q = ecs_query(world, {
         .filter.terms = {
             { ecs_id(EcsPosition3), .inout = EcsIn },
-            { ecs_pair(EcsCollider, ecs_id(EcsBox)), .inout = EcsIn, .oper = EcsOr }, { ecs_id(EcsBox) },
+            { ecs_pair(EcsCollider, ecs_id(EcsBox)), .inout = EcsIn, .oper = EcsOr }, 
+                { ecs_id(EcsBox), .oper = EcsOr },
             { filter, .inout = EcsIn }
         }
     });

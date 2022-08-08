@@ -91,6 +91,11 @@ void EcsOnSetSpatialQuery(ecs_iter_t *it) {
 
     for (int i = 0; i < it->count; i ++) {
         q[i].query = ecs_squery_new(it->world, filter, q[i].center, q[i].size);
+        if (!q[i].query) {
+            char *filter_str = ecs_id_str(it->world, filter);
+            ecs_err("failed to create query for filter '%s'", filter_str);
+            ecs_os_free(filter_str);
+        }
     }
 }
 
@@ -100,6 +105,12 @@ void EcsUpdateSpatialQuery(ecs_iter_t *it) {
 
     int i;
     for (i = 0; i < it->count; i ++) {
+        if (!q->query) {
+            char *filter_str = ecs_id_str(it->world, ecs_field_id(it, 1));
+            ecs_err("missing spatial query for '%s'", filter_str);
+            ecs_os_free(filter_str);
+        }
+
         ecs_squery_update(q->query);
     }
 }
@@ -144,9 +155,9 @@ void FlecsSystemsPhysicsImport(
         flecs.components.geometry.Box(self|up),
         !(flecs.components.physics.Collider, flecs.components.geometry.Box));
 
-    ECS_SYSTEM(world, EcsOnSetSpatialQuery, EcsOnSet,
-        (SpatialQuery, *), ?Prefab);
+    ECS_OBSERVER(world, EcsOnSetSpatialQuery, EcsOnSet,
+        SpatialQuery(self, *), ?Prefab);
 
     ECS_SYSTEM(world, EcsUpdateSpatialQuery, EcsPreUpdate, 
-        (SpatialQuery, *), ?Prefab);
+        SpatialQuery(self, *), ?Prefab);
 }

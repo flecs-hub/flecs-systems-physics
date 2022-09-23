@@ -26,7 +26,8 @@ ecs_squery_t* ecs_squery_new(
             { ecs_pair(EcsCollider, ecs_id(EcsBox)), .inout = EcsIn, .oper = EcsOr }, 
                 { ecs_id(EcsBox), .oper = EcsOr },
             { filter, .inout = EcsIn }
-        }
+        },
+        .filter.instanced = true
     });
 
     result->ot = ecs_octree_new(center, size);

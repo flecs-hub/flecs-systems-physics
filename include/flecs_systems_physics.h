@@ -27,7 +27,7 @@ ECS_STRUCT(EcsSpatialQuery, {
 
 FLECS_SYSTEMS_PHYSICS_API
 ECS_STRUCT(EcsSpatialQueryResult, {
-    ecs_vector_t *results;
+    ecs_vec_t results;
 });
 
 FLECS_SYSTEMS_PHYSICS_API
@@ -74,19 +74,13 @@ public:
         }
     };
 
-    struct SpatialQueryResult : EcsSpatialQueryResult {
-        using iterator = flecs::vector_iterator<oct_entity_t>;
-        
-        iterator begin() {
-            return iterator(static_cast<oct_entity_t*>(_ecs_vector_first(
-                results, ECS_VECTOR_T(oct_entity_t))), 
-                    0);
+    struct SpatialQueryResult : EcsSpatialQueryResult {        
+        oct_entity_t* begin() {
+            return static_cast<oct_entity_t*>(results.array);
         }
 
-        iterator end() {
-            return iterator(static_cast<oct_entity_t*>(_ecs_vector_last(
-                    results, ECS_VECTOR_T(oct_entity_t))),
-                        ecs_vector_count(results));
+        oct_entity_t* end() {
+            return &static_cast<oct_entity_t*>(results.array)[results.count];
         }
     };
 

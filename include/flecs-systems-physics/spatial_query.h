@@ -30,7 +30,7 @@ void ecs_squery_findn(
     const ecs_squery_t *sq,
     vec3 position,
     float range,
-    ecs_vector_t **result);
+    ecs_vec_t *result);
 
 #ifdef __cplusplus
 }

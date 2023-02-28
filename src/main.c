@@ -21,21 +21,21 @@ ECS_DTOR(EcsSpatialQuery, ptr, {
 })
 
 ECS_CTOR(EcsSpatialQueryResult, ptr, {
-    ptr->results = NULL;
+    ptr->results = (ecs_vec_t){0};
 })
 
 ECS_MOVE(EcsSpatialQueryResult, dst, src, {
-    if (dst->results) {
-        ecs_vector_free(dst->results);
+    if (dst->results.array) {
+        ecs_vec_fini_t(NULL, &dst->results, ecs_oct_entity_t);
     }
 
     dst->results = src->results;
-    src->results = NULL;
+    src->results = (ecs_vec_t){0};
 })
 
 ECS_DTOR(EcsSpatialQueryResult, ptr, {
-    if (ptr->results) {
-        ecs_vector_free(ptr->results);
+    if (ptr->results.array) {
+        ecs_vec_fini_t(NULL, &ptr->results, ecs_oct_entity_t);
     }
 })
 

@@ -5,14 +5,14 @@
 typedef struct cube_t {
     struct cube_t *parent;
     struct cube_t *nodes[8];
-    ecs_vector_t *entities;
+    ecs_vec_t entities;
     int32_t id;
     bool is_leaf;
 } cube_t;
 
 struct ecs_octree_t {
     ecs_sparse_t cubes;
-    ecs_vector_t *free_cubes;
+    ecs_vec_t free_cubes;
     cube_t root;
     vec3 center;
     float size;
@@ -31,10 +31,13 @@ cube_t *new_cube(
     ecs_octree_t *ot,
     cube_t *parent)
 {
-    cube_t *result;
-    if (!ecs_vector_pop(ot->free_cubes, cube_t*, &result)) {
+    cube_t *result = NULL;
+    if (!ecs_vec_count(&ot->free_cubes)) {
         result = ecs_sparse_add_t(&ot->cubes, cube_t);
         result->id = (int32_t)ecs_sparse_last_id(&ot->cubes);
+    } else {
+        result = ecs_vec_last_t(&ot->free_cubes, cube_t*)[0];
+        ecs_vec_remove_last(&ot->free_cubes);
     }
     
     result->parent = parent;
@@ -173,7 +176,9 @@ void cube_add_entity(
     cube_t *cube,
     ecs_oct_entity_t *ce)
 {
-    ecs_oct_entity_t *elem = ecs_vector_add(&cube->entities, ecs_oct_entity_t);
+    ecs_vec_init_if_t(&cube->entities, ecs_oct_entity_t);
+    ecs_oct_entity_t *elem = ecs_vec_append_t(
+        NULL, &cube->entities, ecs_oct_entity_t);
     *elem = *ce;
 }
 
@@ -200,7 +205,7 @@ cube_t* cube_insert(
         bool is_leaf = cur->is_leaf;
 
         /* If cube is a leaf and has space, insert */
-        if (is_leaf && ecs_vector_count(cur->entities) < MAX_PER_OCTANT) {
+        if (is_leaf && ecs_vec_count(&cur->entities) < MAX_PER_OCTANT) {
             break;
         }
 
@@ -252,45 +257,46 @@ void cube_split(
     vec3 center,
     float size)
 {
-    int32_t i, count = ecs_vector_count(cube->entities);
+    int32_t i, count = ecs_vec_count(&cube->entities);
 
     /* This will force entities to be pushed to child nodes */
     cube->is_leaf = false; 
 
     for (i = 0; i < count; i ++) {
-        ecs_oct_entity_t *entities = ecs_vector_first(cube->entities, ecs_oct_entity_t);
+        ecs_oct_entity_t *entities = ecs_vec_first_t(&cube->entities, ecs_oct_entity_t);
         cube_t *new_cube = cube_insert(ot, &entities[i], cube, center, size);
         ecs_assert(new_cube != NULL, ECS_INTERNAL_ERROR, NULL);
 
         if (new_cube != cube) {
-            ecs_vector_remove(cube->entities, ecs_oct_entity_t, i);
+            ecs_vec_remove_t(&cube->entities, ecs_oct_entity_t, i);
             i --;
             count --;
-            ecs_assert(count == ecs_vector_count(cube->entities), ECS_INTERNAL_ERROR, NULL);
+            ecs_assert(count == ecs_vec_count(&cube->entities), ECS_INTERNAL_ERROR, NULL);
         } else {
-            ecs_vector_remove_last(cube->entities);
+            ecs_vec_remove_last(&cube->entities);
         }
     }
 
-    ecs_assert(count == ecs_vector_count(cube->entities), ECS_INTERNAL_ERROR, NULL);
+    ecs_assert(count == ecs_vec_count(&cube->entities), ECS_INTERNAL_ERROR, NULL);
 }
 
 static
 void result_add_entity(
-    ecs_vector_t **result,
+    ecs_vec_t *result,
     ecs_oct_entity_t *e)
 {
-    ecs_oct_entity_t *elem = ecs_vector_add(result, ecs_oct_entity_t);
+    ecs_oct_entity_t *elem = ecs_vec_append_t(NULL, result, ecs_oct_entity_t);
     *elem = *e;
 }
 
 static
 void cube_find_all(
     cube_t *cube,
-    ecs_vector_t **result)
+    ecs_vec_t *result)
 {
-    ecs_oct_entity_t *entities = ecs_vector_first(cube->entities, ecs_oct_entity_t);
-    int32_t i, count = ecs_vector_count(cube->entities);
+    ecs_vec_init_if_t(result, ecs_oct_entity_t);
+    ecs_oct_entity_t *entities = ecs_vec_first_t(&cube->entities, ecs_oct_entity_t);
+    int32_t i, count = ecs_vec_count(&cube->entities);
     for (i = 0; i < count; i ++) {
         result_add_entity(result, &entities[i]);
     }
@@ -312,12 +318,13 @@ void cube_findn(
     float size,
     vec3 pos,
     float range,
-    ecs_vector_t **result)
+    ecs_vec_t *result)
 {
     size /= 2;
 
-    ecs_oct_entity_t *entities = ecs_vector_first(cube->entities, ecs_oct_entity_t);
-    int32_t i, count = ecs_vector_count(cube->entities);
+    ecs_vec_init_if_t(result, ecs_oct_entity_t);
+    ecs_oct_entity_t *entities = ecs_vec_first_t(&cube->entities, ecs_oct_entity_t);
+    int32_t i, count = ecs_vec_count(&cube->entities);
 
     for (i = 0; i < count; i ++) {
         ecs_oct_entity_t *e = &entities[i];
@@ -366,18 +373,19 @@ void ecs_octree_clear(
     int32_t i, count = ecs_sparse_count(&ot->cubes);
     for (i = 0; i < count; i ++) {
         cube_t *cube = ecs_sparse_get_dense_t(&ot->cubes, cube_t, i);
-        ecs_vector_clear(cube->entities);
+        ecs_vec_clear(&cube->entities);
         ecs_os_memset_n(cube->nodes, 0, cube_t*, 8);
 
         if (cube->parent) {
-            cube_t **cptr = ecs_vector_add(&ot->free_cubes, cube_t*);
+            ecs_vec_init_if_t(&ot->free_cubes, cube_t*);
+            cube_t **cptr = ecs_vec_append_t(NULL, &ot->free_cubes, cube_t*);
             *cptr = cube;
             cube->parent = NULL;
         }
     }
 
     /* Clear entities of root */
-    ecs_vector_clear(ot->root.entities);
+    ecs_vec_clear(&ot->root.entities);
     ecs_os_memset_n(ot->root.nodes, 0, cube_t*, 8);
     ot->count = 0;
 }
@@ -412,11 +420,11 @@ void ecs_octree_findn(
     ecs_octree_t *ot,
     vec3 pos,
     float range,
-    ecs_vector_t **result)
+    ecs_vec_t *result)
 {
     ecs_assert(ot != NULL, ECS_INVALID_PARAMETER, NULL);
 
-    ecs_vector_clear(*result);
+    ecs_vec_clear(result);
     cube_findn(&ot->root, ot->center, ot->size / 2, pos, range, result);
 }
 
@@ -443,7 +451,7 @@ int cube_dump(
     }
     indent --;
 
-    return ecs_vector_count(cube->entities) + count;
+    return ecs_vec_count(&cube->entities) + count;
 }
 
 int32_t ecs_octree_dump(

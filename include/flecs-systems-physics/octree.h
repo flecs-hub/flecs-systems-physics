@@ -40,7 +40,7 @@ void ecs_octree_findn(
     ecs_octree_t *ot,
     vec3 pos,
     float range,
-    ecs_vector_t **result);
+    ecs_vec_t *result);
 
 FLECS_SYSTEMS_PHYSICS_API
 int32_t ecs_octree_dump(

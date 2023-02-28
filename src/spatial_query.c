@@ -24,7 +24,7 @@ ecs_squery_t* ecs_squery_new(
         .filter.terms = {
             { ecs_id(EcsPosition3), .inout = EcsIn },
             { ecs_pair(EcsCollider, ecs_id(EcsBox)), .inout = EcsIn, .oper = EcsOr }, 
-                { ecs_id(EcsBox), .oper = EcsOr },
+            { ecs_id(EcsBox) },
             { filter, .inout = EcsIn }
         },
         .filter.instanced = true
@@ -99,7 +99,7 @@ void ecs_squery_findn(
     const ecs_squery_t *sq,
     vec3 position,
     float range,
-    ecs_vector_t **result)
+    ecs_vec_t *result)
 {
     ecs_assert(sq != NULL, ECS_INVALID_PARAMETER, NULL);
     ecs_assert(sq->q != NULL, ECS_INVALID_PARAMETER, NULL);

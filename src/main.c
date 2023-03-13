@@ -184,4 +184,13 @@ void FlecsSystemsPhysicsImport(
     ecs_system(world, { .entity = EcsMove2, .query.filter.instanced = true });
     ecs_system(world, { .entity = EcsMove3, .query.filter.instanced = true });
     ecs_system(world, { .entity = EcsRotate3, .query.filter.instanced = true });
+
+    ecs_add_pair(world, ecs_id(EcsVelocity2), 
+        EcsWith, ecs_id(EcsPosition2));
+    ecs_add_pair(world, ecs_id(EcsVelocity3), 
+        EcsWith, ecs_id(EcsPosition3));
+    ecs_add_pair(world, ecs_id(EcsRotation3), 
+        EcsWith, ecs_id(EcsPosition3));
+    ecs_add_pair(world, ecs_id(EcsAngularVelocity), 
+        EcsWith, ecs_id(EcsRotation3));
 }

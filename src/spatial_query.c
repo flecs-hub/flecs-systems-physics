@@ -21,13 +21,13 @@ ecs_squery_t* ecs_squery_new(
     ecs_squery_t *result = ecs_os_calloc(sizeof(ecs_squery_t));
 
     result->q = ecs_query(world, {
-        .filter.terms = {
+        .terms = {
             { ecs_id(EcsPosition3), .inout = EcsIn },
             { ecs_pair(EcsCollider, ecs_id(EcsBox)), .inout = EcsIn, .oper = EcsOr }, 
             { ecs_id(EcsBox) },
             { filter, .inout = EcsIn }
         },
-        .filter.instanced = true
+        .cache_kind = EcsQueryCacheAuto
     });
 
     result->ot = ecs_octree_new(center, size);
@@ -49,20 +49,20 @@ void ecs_squery_free(
 void ecs_squery_update(
     ecs_squery_t *sq)
 {
-    ecs_assert(sq != NULL, ECS_INVALID_PARAMETER, NULL);
-    ecs_assert(sq->q != NULL, ECS_INVALID_PARAMETER, NULL);
+    ecs_assert(sq != NULL,     ECS_INVALID_PARAMETER, NULL);
+    ecs_assert(sq->q != NULL,  ECS_INVALID_PARAMETER, NULL);
     ecs_assert(sq->ot != NULL, ECS_INVALID_PARAMETER, NULL);
 
-    if (ecs_query_changed(sq->q, 0)) {
+    if (ecs_query_changed(sq->q)) {
         ecs_octree_clear(sq->ot);
 
         const ecs_world_t *world = ecs_get_world(sq->q);
         ecs_iter_t it = ecs_query_iter(world, sq->q);
         while (ecs_query_next(&it)) {
-            EcsPosition3 *p = ecs_field(&it, EcsPosition3, 1);
-            EcsBox *b = ecs_field(&it, EcsBox, 2);
+            EcsPosition3 *p = ecs_field(&it, EcsPosition3, 0);
+            EcsBox *b = ecs_field(&it, EcsBox, 1);
 
-            if (ecs_field_is_self(&it, 2)) {
+            if (ecs_field_is_self(&it, 1)) {
                 int i;
                 for (i = 0; i < it.count; i ++) {
                     vec3 vp, vs;
